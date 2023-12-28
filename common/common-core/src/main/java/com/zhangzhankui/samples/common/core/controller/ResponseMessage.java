@@ -23,16 +23,12 @@ public class ResponseMessage<T> implements Serializable {
     return result(null, ResponseEnum.ERROR.getErrorCode(), ResponseEnum.ERROR.getErrorMessage());
   }
 
-  public static <T> ResponseMessage<T> failed(T data) {
-    return result(data, ResponseEnum.ERROR.getErrorCode(), ResponseEnum.ERROR.getErrorMessage());
+  public static <T> ResponseMessage<T> failed(String errorMessage) {
+    return result(null, ResponseEnum.CUSTOM_ERROR.getErrorCode(), errorMessage);
   }
 
   public static <T> ResponseMessage<T> failed(ResponseEnum responseEnum) {
     return result(null, responseEnum.getErrorCode(), responseEnum.getErrorMessage());
-  }
-
-  public static <T> ResponseMessage<T> failed(ResponseEnum responseEnum, T data) {
-    return result(data, responseEnum.getErrorCode(), responseEnum.getErrorMessage());
   }
 
   public void setErrorCode(int errorCode) {
