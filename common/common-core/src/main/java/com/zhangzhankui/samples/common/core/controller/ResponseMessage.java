@@ -1,66 +1,110 @@
 package com.zhangzhankui.samples.common.core.controller;
 
-import java.io.Serializable;
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.zhangzhankui.samples.common.core.enums.ResponseEnum;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+/**
+ * 统一API响应结果封装
+ *
+ * @param <T> 响应数据类型
+ */
+@Data
+@Accessors(chain = true)
+@Schema(description = "统一响应结果")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseMessage<T> implements Serializable {
-  private static final long serialVersionUID = 7526472295622776147L;
 
-  private int errorCode;
-  private String errorMessage;
-  private Optional<T> data;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-  public static <T> ResponseMessage<T> ok() {
-    return result(null, ResponseEnum.SUCCESS.getErrorCode(), ResponseEnum.SUCCESS.getErrorMessage());
-  }
+    @Schema(description = "状态码", example = "0")
+    private int code;
 
-  public static <T> ResponseMessage<T> ok(T data) {
-    return result(data, ResponseEnum.SUCCESS.getErrorCode(), ResponseEnum.SUCCESS.getErrorMessage());
-  }
+    @Schema(description = "响应消息", example = "Success")
+    private String message;
 
-  public static <T> ResponseMessage<T> failed() {
-    return result(null, ResponseEnum.ERROR.getErrorCode(), ResponseEnum.ERROR.getErrorMessage());
-  }
+    @Schema(description = "响应数据")
+    private T data;
 
-  public static <T> ResponseMessage<T> failed(String errorMessage) {
-    return result(null, ResponseEnum.CUSTOM_ERROR.getErrorCode(), errorMessage);
-  }
+    @Schema(description = "时间戳")
+    private LocalDateTime timestamp;
 
-  public static <T> ResponseMessage<T> failed(ResponseEnum responseEnum) {
-    return result(null, responseEnum.getErrorCode(), responseEnum.getErrorMessage());
-  }
+    @Schema(description = "请求追踪ID")
+    private String traceId;
 
-  public void setErrorCode(int errorCode) {
-    this.errorCode = errorCode;
-  }
+    public ResponseMessage() {
+        this.timestamp = LocalDateTime.now();
+    }
 
-  public int getErrorCode() {
-    return errorCode;
-  }
+    // ==================== 成功响应 ====================
 
-  public void setErrorMessage(String errorMessage) {
-    this.errorMessage = errorMessage;
-  }
+    public static <T> ResponseMessage<T> ok() {
+        return result(null, ResponseEnum.SUCCESS);
+    }
 
-  public String getErrorMessage() {
-    return errorMessage;
-  }
+    public static <T> ResponseMessage<T> ok(T data) {
+        return result(data, ResponseEnum.SUCCESS);
+    }
 
-  public void setData(T data) {
-    this.data = Optional.ofNullable(data);
-  }
+    public static <T> ResponseMessage<T> ok(T data, String message) {
+        return result(data, ResponseEnum.SUCCESS.getCode(), message);
+    }
 
-  public Optional<T> getData() {
-    return data;
-  }
+    // ==================== 失败响应 ====================
 
-  private static <T> ResponseMessage<T> result(T data, int code, String msg) {
-    ResponseMessage<T> result = new ResponseMessage<>();
-    result.setErrorCode(code);
-    result.setData(data);
-    result.setErrorMessage(msg);
-    return result;
-  }
+    public static <T> ResponseMessage<T> failed() {
+        return result(null, ResponseEnum.ERROR);
+    }
 
+    public static <T> ResponseMessage<T> failed(String message) {
+        return result(null, ResponseEnum.CUSTOM_ERROR.getCode(), message);
+    }
+
+    public static <T> ResponseMessage<T> failed(ResponseEnum responseEnum) {
+        return result(null, responseEnum);
+    }
+
+    public static <T> ResponseMessage<T> failed(int code, String message) {
+        return result(null, code, message);
+    }
+
+    public static <T> ResponseMessage<T> failed(ResponseEnum responseEnum, String message) {
+        return result(null, responseEnum.getCode(), message);
+    }
+
+    // ==================== 工具方法 ====================
+
+    private static <T> ResponseMessage<T> result(T data, ResponseEnum responseEnum) {
+        return result(data, responseEnum.getCode(), responseEnum.getMessage());
+    }
+
+    private static <T> ResponseMessage<T> result(T data, int code, String message) {
+        ResponseMessage<T> result = new ResponseMessage<>();
+        result.setCode(code);
+        result.setMessage(message);
+        result.setData(data);
+        return result;
+    }
+
+    /**
+     * 设置追踪ID
+     */
+    public ResponseMessage<T> traceId(String traceId) {
+        this.traceId = traceId;
+        return this;
+    }
+
+    /**
+     * 判断是否成功
+     */
+    public boolean isSuccess() {
+        return this.code == ResponseEnum.SUCCESS.getCode();
+    }
 }

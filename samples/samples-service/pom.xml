@@ -7,11 +7,45 @@
 
   <artifactId>samples-service</artifactId>
   <packaging>jar</packaging>
+  <description>服务层 - 业务逻辑实现</description>
 
   <parent>
     <groupId>com.zhangzhankui.samples</groupId>
     <artifactId>samples</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.zhangzhankui.samples</groupId>
+      <artifactId>samples-interface</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.zhangzhankui.samples</groupId>
+      <artifactId>samples-db</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.zhangzhankui.samples</groupId>
+      <artifactId>common-redis</artifactId>
+    </dependency>
+    
+    <!-- MapStruct -->
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+    </dependency>
+    
+    <!-- Spring Context -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    
+    <!-- Transactions -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

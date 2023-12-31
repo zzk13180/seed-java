@@ -1,10 +1,251 @@
+# ========================================
+# 应用配置
+# ========================================
 spring:
+  application:
+    name: seed-java
   profiles:
-    active: db
-  messages:
-    encoding: UTF-8
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+# 应用版本
+app:
+  version: 0.0.1-SNAPSHOT
+
+---
+# ========================================
+# 开发环境配置
+# ========================================
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  # 数据源配置
+  datasource:
+    url: jdbc:h2:mem:seed;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 30000
+      pool-name: SeedHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  # H2 控制台
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
+  # JPA 配置
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  # Redis 配置 (可选)
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
+          max-wait: -1ms
+
+  # Jackson 配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+
+# 服务器配置
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 200
+    min-spare-threads: 10
+  shutdown: graceful
+
+# 安全配置
+app:
+  security:
+    enabled: true
+    # 开发环境使用默认密钥，生产环境必须通过环境变量配置
+    jwt-secret: ${JWT_SECRET:ZGV2ZWxvcG1lbnRTZWNyZXRLZXlGb3JUZXN0aW5nT25seURvTm90VXNlSW5Qcm9kdWN0aW9uRW52aXJvbm1lbnQ=}
+    jwt-expiration: 7200
+    refresh-token-expiration: 604800
+    ignore-paths:
+      - /index/hello
+      - /h2-console/**
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+  packages-to-scan: com.zhangzhankui.samples.controller
+
+# Actuator 配置
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开发环境暴露更多端点便于调试，生产环境配置会覆盖此设置
+        include: health,info,metrics,prometheus,loggers
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+  health:
+    redis:
+      enabled: false
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.zhangzhankui.samples: DEBUG
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} [%X{traceId}] %m%n%wEx"
+  file:
+    name: logs/${spring.application.name}.log
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 3GB
+
+---
+# ========================================
+# 测试环境配置
+# ========================================
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/seed_test?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+logging:
+  level:
+    root: INFO
+    com.zhangzhankui.samples: INFO
+
+---
+# ========================================
+# 生产环境配置
+# ========================================
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:seed}?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      cluster:
+        nodes: ${REDIS_CLUSTER_NODES:}
+
+  h2:
+    console:
+      enabled: false
 
 server:
-  port: 8080
-  servlet:
-    context-path: /api
+  port: ${SERVER_PORT:8080}
+  tomcat:
+    max-threads: 500
+    min-spare-threads: 50
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: WARN
+    com.zhangzhankui.samples: INFO
+  file:
+    name: logs/${spring.application.name}.log

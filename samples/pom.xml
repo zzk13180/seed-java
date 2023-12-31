@@ -7,11 +7,12 @@
 
   <artifactId>samples</artifactId>
   <packaging>pom</packaging>
+  <description>示例业务模块</description>
 
   <parent>
     <groupId>com.zhangzhankui.samples</groupId>
     <artifactId>seed</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <modules>
