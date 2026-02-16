@@ -1,0 +1,12 @@
+# 私有仓库认证和证书文件（敏感信息，不应提交）
+auth/
+certs/
+
+# Docker相关临时文件
+*.log
+.dockerignore
+
+# 其他常见忽略项（可选）
+node_modules/
+*.tmp
+.DS_Store

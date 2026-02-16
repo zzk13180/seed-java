@@ -1,0 +1,291 @@
+---
+# ========================================
+# Docker Compose 基础配置
+# ========================================
+#
+# 使用说明:
+#
+#   开发环境 (自动加载 docker-compose.override.yml):
+#     docker compose --profile dev up -d
+#     → 启动所有服务，使用开发配置
+#
+#   生产环境 (显式指定生产覆盖文件):
+#     docker compose -f docker-compose.yml -f docker-compose.prod.yml --profile app up -d
+#     → 启动所有服务，使用生产配置
+#
+#   仅基础设施:
+#     docker compose --profile infra up -d
+#     → 启动: nacos, redis, postgres, minio, sentinel-dashboard
+#
+#   测试环境:
+#     docker compose -f docker-compose.yml -f docker-compose.test.yml --profile test up -d
+#
+#   停止服务:
+#     docker compose --profile <profile> down
+#
+# 配置分层说明:
+#   - docker-compose.yml: 基础配置（所有环境共用）
+#   - docker-compose.override.yml: 开发环境覆盖（自动加载）
+#   - docker-compose.prod.yml: 生产环境覆盖（需显式指定）
+#   - docker-compose.test.yml: 测试环境覆盖（需显式指定）
+#
+# ========================================
+
+x-common-env: &common-env
+  SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
+  NACOS_SERVER_ADDR: nacos:8848
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  TZ: Asia/Shanghai
+
+x-healthcheck-defaults: &healthcheck-defaults
+  interval: 30s
+  timeout: 10s
+  retries: 5
+  start_period: 60s
+
+x-java-service: &java-service
+  networks:
+    - seed-network
+  restart: unless-stopped
+
+services:
+  # ==================== 基础设施服务 ====================
+  nacos:
+    image: nacos/nacos-server:v2.4.3-slim
+    container_name: seed-nacos
+    profiles:
+      - infra
+      - app
+      - dev
+    platform: linux/amd64
+    environment:
+      MODE: standalone
+      PREFER_HOST_MODE: hostname
+      NACOS_AUTH_ENABLE: ${NACOS_AUTH_ENABLE:-true}
+      NACOS_AUTH_TOKEN: ${NACOS_AUTH_TOKEN:?NACOS_AUTH_TOKEN is required}
+      NACOS_AUTH_IDENTITY_KEY: ${NACOS_AUTH_IDENTITY_KEY:?NACOS_AUTH_IDENTITY_KEY is required}
+      NACOS_AUTH_IDENTITY_VALUE: ${NACOS_AUTH_IDENTITY_VALUE:?NACOS_AUTH_IDENTITY_VALUE is required}
+      JVM_XMS: ${NACOS_JVM_XMS:-256m}
+      JVM_XMX: ${NACOS_JVM_XMX:-512m}
+    ports:
+      - "${NACOS_PORT:-8848}:8848"
+      - "9848:9848"
+      - "9849:9849"
+    volumes:
+      - nacos-data:/home/nacos/data
+    networks:
+      - seed-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/v1/console/health/readiness"]
+      <<: *healthcheck-defaults
+
+  redis:
+    image: redis:7-alpine
+    container_name: seed-redis
+    profiles:
+      - infra
+      - app
+      - dev
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes ${REDIS_PASSWORD:+--requirepass ${REDIS_PASSWORD}}
+    networks:
+      - seed-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "${REDIS_PASSWORD:+-a}", "${REDIS_PASSWORD:-}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: seed-postgres
+    profiles:
+      - infra
+      - app
+      - dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DATABASE:-seed}
+      POSTGRES_USER: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../db/seed_cloud.sql:/docker-entrypoint-initdb.d/01-seed.sql
+    networks:
+      - seed-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME:-postgres} -d ${POSTGRES_DATABASE:-seed}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
+    container_name: seed-minio
+    profiles:
+      - infra
+      - app
+      - dev
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - seed-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      <<: *healthcheck-defaults
+
+  sentinel-dashboard:
+    image: bladex/sentinel-dashboard:1.8.6
+    container_name: seed-sentinel
+    profiles:
+      - infra
+      - app
+      - dev
+    ports:
+      - "${SENTINEL_PORT:-8858}:8858"
+    networks:
+      - seed-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8858"]
+      <<: *healthcheck-defaults
+
+  # ==================== 应用服务 ====================
+  gateway:
+    build:
+      context: ../..
+      dockerfile: ops/deployment/docker/Dockerfile
+      args:
+        MODULE: apps/platform/gateway
+        SKIP_TESTS: ${SKIP_TESTS:-true}
+    image: seed-cloud/gateway:${IMAGE_TAG:-latest}
+    container_name: seed-gateway
+    profiles:
+      - app
+      - dev
+    environment:
+      <<: *common-env
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    ports:
+      - "${GATEWAY_PORT:-8080}:8080"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    <<: *java-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      <<: *healthcheck-defaults
+
+  auth:
+    build:
+      context: ../..
+      dockerfile: ops/deployment/docker/Dockerfile
+      args:
+        MODULE: apps/domains/identity/auth-service
+        SKIP_TESTS: ${SKIP_TESTS:-true}
+        PORT: 9100
+    image: seed-cloud/auth:${IMAGE_TAG:-latest}
+    container_name: seed-auth
+    profiles:
+      - app
+      - dev
+    environment:
+      <<: *common-env
+    ports:
+      - "${AUTH_PORT:-9100}:9100"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    <<: *java-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9100/actuator/health"]
+      <<: *healthcheck-defaults
+
+  system:
+    build:
+      context: ../..
+      dockerfile: ops/deployment/docker/Dockerfile
+      args:
+        MODULE: apps/domains/administration/system-service
+        SKIP_TESTS: ${SKIP_TESTS:-true}
+        PORT: 9200
+    image: seed-cloud/system:${IMAGE_TAG:-latest}
+    container_name: seed-system
+    profiles:
+      - app
+      - dev
+    environment:
+      <<: *common-env
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE:-seed}
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      SENTINEL_DASHBOARD: sentinel-dashboard:8858
+    ports:
+      - "${SYSTEM_PORT:-9200}:9200"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    <<: *java-service
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/actuator/health"]
+      <<: *healthcheck-defaults
+
+  # ==================== 前端服务 ====================
+  frontend:
+    build:
+      context: ../..
+      dockerfile: apps/frontend/Dockerfile
+    image: seed-cloud/frontend:${IMAGE_TAG:-latest}
+    container_name: seed-frontend
+    profiles:
+      - app
+      - dev
+    environment:
+      BACKEND_URL: gateway:8080
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      gateway:
+        condition: service_healthy
+    networks:
+      - seed-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      <<: *healthcheck-defaults
+
+networks:
+  seed-network:
+    driver: bridge
+
+volumes:
+  nacos-data:
+  redis-data:
+  postgres-data:
+  minio-data:

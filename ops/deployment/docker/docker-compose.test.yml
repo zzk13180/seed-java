@@ -1,0 +1,112 @@
+---
+# ========================================
+# Docker Compose 测试环境覆盖配置
+# ========================================
+#
+# 使用说明:
+#   启动测试环境:
+#     docker compose -f docker-compose.yml -f docker-compose.test.yml --profile test up -d
+#
+#   停止并清理:
+#     docker compose -f docker-compose.yml -f docker-compose.test.yml --profile test down -v
+#
+# 特点:
+#   - 使用独立的端口范围 (避免与开发环境冲突)
+#   - 使用独立的 volume (数据隔离)
+#   - 容器名称带 test 前缀
+#   - 适合 CI/CD 和本地测试
+#
+# ========================================
+
+services:
+  # ==================== 测试基础设施 ====================
+  nacos:
+    container_name: seed-test-nacos
+    profiles:
+      - test
+    ports:
+      - "18848:8848"
+      - "19848:9848"
+      - "19849:9849"
+    volumes:
+      - test-nacos-data:/home/nacos/data
+
+  redis:
+    container_name: seed-test-redis
+    profiles:
+      - test
+    ports:
+      - "16379:6379"
+    volumes:
+      - test-redis-data:/data
+
+  postgres:
+    container_name: seed-test-postgres
+    profiles:
+      - test
+    environment:
+      POSTGRES_DB: seed_test
+    ports:
+      - "15432:5432"
+    volumes:
+      - test-postgres-data:/var/lib/postgresql/data
+      - ../db/seed_cloud.sql:/docker-entrypoint-initdb.d/01-seed.sql
+
+  # ==================== 测试应用服务 ====================
+  gateway:
+    container_name: seed-test-gateway
+    profiles:
+      - test
+    environment:
+      SPRING_PROFILES_ACTIVE: test,docker
+      NACOS_SERVER_ADDR: seed-test-nacos:8848
+      REDIS_HOST: seed-test-redis
+    ports:
+      - "18080:8080"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  auth:
+    container_name: seed-test-auth
+    profiles:
+      - test
+    environment:
+      SPRING_PROFILES_ACTIVE: test,docker
+      NACOS_SERVER_ADDR: seed-test-nacos:8848
+      REDIS_HOST: seed-test-redis
+    ports:
+      - "19100:9100"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  system:
+    container_name: seed-test-system
+    profiles:
+      - test
+    environment:
+      SPRING_PROFILES_ACTIVE: test,docker
+      NACOS_SERVER_ADDR: seed-test-nacos:8848
+      REDIS_HOST: seed-test-redis
+      POSTGRES_HOST: seed-test-postgres
+      POSTGRES_DATABASE: seed_test
+    ports:
+      - "19200:9200"
+    depends_on:
+      nacos:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+
+# 测试专用 volumes (与开发环境隔离)
+volumes:
+  test-nacos-data:
+  test-redis-data:
+  test-postgres-data:

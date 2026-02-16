@@ -1,0 +1,61 @@
+/**
+ * 通用样式 — 极简主义
+ * 仅保留 Tailwind 不覆盖的全局重置与自定义滚动条。
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Helvetica Neue',
+    sans-serif;
+  line-height: 1.6;
+  color: var(--seed-text-primary);
+  background-color: var(--seed-bg-page);
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--seed-primary);
+  text-decoration: none;
+  transition: color var(--seed-transition);
+
+  &:hover {
+    color: var(--seed-primary-dark);
+  }
+}
+
+// 隐藏滚动条，保持界面干净
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
+}

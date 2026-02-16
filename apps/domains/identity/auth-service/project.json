@@ -1,0 +1,38 @@
+{
+  "name": "auth-service",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/domains/identity/auth-service/src",
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn -q spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.jvmArguments=\"-Dspring.devtools.restart.enabled=true\"",
+        "cwd": "apps/domains/identity/auth-service"
+      }
+    },
+    "compile": {
+      "executor": "@nx/maven:compile",
+      "options": {}
+    },
+    "test": {
+      "executor": "@nx/maven:test",
+      "options": {}
+    },
+    "package": {
+      "executor": "@nx/maven:package",
+      "options": {},
+      "dependsOn": ["compile"]
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "mvn package -DskipTests",
+        "cwd": "apps/domains/identity/auth-service"
+      },
+      "outputs": ["{projectRoot}/target"],
+      "dependsOn": ["^build"]
+    }
+  },
+  "tags": ["type:app", "scope:identity"]
+}

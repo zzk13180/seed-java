@@ -1,0 +1,16 @@
+# Eclipse JDT Language Server 编译器设置
+
+# 未使用的导入：ignore = 忽略, info = 信息, warning = 警告, error = 错误
+org.eclipse.jdt.core.compiler.problem.unusedImport=info
+
+# 未使用的局部变量
+org.eclipse.jdt.core.compiler.problem.unusedLocal=info
+
+# 未使用的私有成员
+org.eclipse.jdt.core.compiler.problem.unusedPrivateMember=info
+
+# 未使用的参数
+org.eclipse.jdt.core.compiler.problem.unusedParameter=info
+
+# 未使用的类型参数
+org.eclipse.jdt.core.compiler.problem.unusedTypeParameter=info

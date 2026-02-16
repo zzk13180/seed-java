@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+  <property name="LOG_PATH" value="/app/logs" />
+  <property name="APP_NAME" value="seed-gateway" />
+
+  <!-- ========== 开发环境：精简控制台输出 ========== -->
+  <springProfile name="dev">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>%clr(%d{HH:mm:ss}){faint} %clr(%5p) %clr([GW]){blue} %clr(%-30.30logger{29}){cyan} %clr(:){faint} %m%n%wEx</pattern>
+      </encoder>
+    </appender>
+
+    <!-- 抑制框架噪音 -->
+    <logger name="com.alibaba.nacos" level="WARN" />
+    <logger name="com.alibaba.cloud" level="WARN" />
+    <logger name="com.alibaba.csp.sentinel" level="WARN" />
+    <logger name="org.springframework.cloud.gateway" level="INFO" />
+    <logger name="org.springframework.cloud.loadbalancer" level="WARN" />
+    <logger name="org.springframework.boot.actuate" level="WARN" />
+    <logger name="org.springframework.security" level="WARN" />
+    <logger name="io.lettuce" level="WARN" />
+    <logger name="io.netty" level="WARN" />
+    <logger name="reactor.netty" level="WARN" />
+    <logger name="org.springdoc" level="WARN" />
+    <logger name="_org.springframework.web" level="WARN" />
+
+    <!-- 应用日志 -->
+    <logger name="com.zhangzhankui.seed" level="DEBUG" />
+
+    <root level="WARN">
+      <appender-ref ref="CONSOLE" />
+    </root>
+  </springProfile>
+
+  <!-- ========== 非开发环境：标准输出 ========== -->
+  <springProfile name="!dev">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta}
+          %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint}
+          %m%n%wEx</pattern>
+      </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>${LOG_PATH}/${APP_NAME}.log</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>${LOG_PATH}/${APP_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+        <maxHistory>30</maxHistory>
+      </rollingPolicy>
+      <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n%wEx</pattern>
+      </encoder>
+    </appender>
+
+    <root level="INFO">
+      <appender-ref ref="CONSOLE" />
+      <!-- <appender-ref ref="FILE" /> -->
+    </root>
+  </springProfile>
+</configuration>

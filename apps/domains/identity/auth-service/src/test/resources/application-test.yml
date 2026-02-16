@@ -1,0 +1,39 @@
+---
+spring:
+  application:
+    name: "auth-service-test"
+  data:
+    redis:
+      host: "localhost"
+      port: 6379
+      database: 0
+      timeout: "3000ms"
+  cloud:
+    nacos:
+      discovery:
+        enabled: false
+      config:
+        enabled: false
+logging:
+  level:
+    root: "INFO"
+    '[com.zhangzhankui.seed]': "DEBUG"
+    '[org.springframework.web]': "DEBUG"
+sa-token:
+  token-name: "Authorization"
+  timeout: 3600
+  is-concurrent: true
+  is-share: true
+  token-style: "uuid"
+  is-log: true
+seed:
+  security:
+    inner-auth-secret: "test-inner-auth-secret-for-unit-tests-only"
+login:
+  security:
+    ip-rate-limit-enabled: false
+    ip-rate-limit-max: 100
+    ip-rate-limit-duration: 60
+    max-fail-attempts: 10
+    fail-count-reset-duration: 300
+    lock-duration: 600

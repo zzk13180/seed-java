@@ -1,0 +1,15 @@
+---
+# 开发环境配置
+# 禁用 OAuth2 客户端配置（使用 sa-token 本地认证）
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientAutoConfiguration
+  security:
+    oauth2:
+      client:
+        registration: {}
+        provider: {}
+logging:
+  level:
+    '[com.zhangzhankui.seed]': "debug"

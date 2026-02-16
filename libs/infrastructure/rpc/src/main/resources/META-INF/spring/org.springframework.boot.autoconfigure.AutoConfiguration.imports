@@ -1,0 +1,2 @@
+com.zhangzhankui.seed.common.rpc.config.RpcAutoConfiguration
+com.zhangzhankui.seed.common.rpc.sentinel.SentinelBlockExceptionHandler

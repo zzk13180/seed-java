@@ -29,9 +29,6 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
-
 ### Logs ###
 logs/
 *.log
@@ -47,3 +44,88 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+### Code Quality Reports ###
+# Checkstyle
+**/checkstyle-result.xml
+**/checkstyle-cachefile
+
+# PMD
+**/pmd.xml
+**/cpd.xml
+
+# SpotBugs
+**/spotbugsXml.xml
+**/spotbugs.html
+
+# JaCoCo
+**/jacoco.exec
+**/jacoco-ut.exec
+**/jacoco-it.exec
+
+# Pitest
+**/pit-reports/
+**/pit-history.bin
+
+docs/
+
+### Nx ###
+.nx/
+.nx/cache
+.nx/workspace-data
+node_modules/
+output.html
+static/
+
+### pnpm ###
+pnpm-debug.log*
+
+### npm ###
+npm-debug.log*
+
+### Yarn ###
+yarn-error.log
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+.pnp.*
+
+### Nx generated files (keep nx and nx.bat for wrapper) ###
+# nx
+# nx.bat
+
+### Editor directories and files ###
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+### Test outputs ###
+**/test-output/
+**/surefire-reports/
+**/failsafe-reports/
+
+### Maven wrapper (optional, uncomment if not committing wrapper) ###
+# .mvn/
+
+### Docker ###
+docker-compose.override.yml
+
+### Secrets - 敏感文件不入库 ###
+ops/deployment/docker/certs/tls.key
+ops/deployment/docker/auth/htpasswd
+
+# 全局敏感文件通配 — 防止在任意路径意外提交密钥/证书
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+!**/package-lock.json
+
+.venv
+
+coverage/
+dist/

@@ -1,100 +1,268 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>com.zhangzhankui.samples</groupId>
-  <artifactId>seed</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>seed-java</name>
-  <packaging>pom</packaging>
-  <url>https://www.zhangzhankui.com</url>
-  <description>Enterprise Java Seed Project - 企业级Java种子项目</description>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.1</version>
+    <version>3.4.1</version>
     <relativePath/>
   </parent>
 
-  <properties>
-    <!-- Java Version -->
-    <java.version>21</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    
-    <!-- Dependency Versions -->
-    <springdoc.version>2.3.0</springdoc.version>
-    <mapstruct.version>1.5.5.Final</mapstruct.version>
-    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-    <jwt.version>0.12.3</jwt.version>
-    <commons-lang3.version>3.14.0</commons-lang3.version>
-    <mysql.version>8.2.0</mysql.version>
-    
-    <!-- Plugin Versions -->
-    <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
-    
-    <!-- Test Settings -->
-    <maven.test.skip>false</maven.test.skip>
-    <skipTests>false</skipTests>
-  </properties>
+  <groupId>com.zhangzhankui.seed</groupId>
+  <artifactId>seed</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>seed-cloud</name>
+  <description>Enterprise Java Microservices Seed Project - 企业级微服务种子项目</description>
+  <url>https://www.zhangzhankui.com</url>
 
   <modules>
-    <module>common</module>
-    <module>samples</module>
+    <!-- libs: 共享库 -->
+    <module>libs/core</module>
+    <module>libs/infrastructure/datasource</module>
+    <module>libs/infrastructure/redis</module>
+    <module>libs/infrastructure/rpc</module>
+    <module>libs/components/security</module>
+    <module>libs/components/web</module>
+    <module>libs/components/log</module>
+    <module>libs/components/file</module>
+    <module>libs/components/swagger</module>
+    <module>libs/api/system-api</module>
+    <!-- apps: 可部署应用 -->
+    <module>apps/domains/identity/auth-service</module>
+    <module>apps/domains/administration/system-service</module>
+    <module>apps/platform/gateway</module>
   </modules>
+
+  <properties>
+    <archunit.version>1.2.1</archunit.version>
+
+    <!-- Default empty argLine for JaCoCo integration -->
+    <argLine/>
+    <awaitility.version>4.2.0</awaitility.version>
+
+    <!-- Code Quality Plugin Versions -->
+    <checkstyle.version>10.21.0</checkstyle.version>
+    <commons-lang3.version>3.17.0</commons-lang3.version>
+    <docker.namespace>seed-cloud</docker.namespace>
+    <docker.plugin.version>0.45.1</docker.plugin.version>
+
+    <!-- Docker Settings -->
+    <docker.registry>registry.cn-hangzhou.aliyuncs.com</docker.registry>
+    <druid.version>1.2.24</druid.version>
+    <dynamic-datasource.version>4.3.1</dynamic-datasource.version>
+    <findsecbugs.version>1.13.0</findsecbugs.version>
+    <google-java-format.version>1.24.0</google-java-format.version>
+    <jacoco.version>0.8.11</jacoco.version>
+    <!-- Java Version -->
+    <java.version>21</java.version>
+    <jmh.version>1.37</jmh.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <mapstruct.version>1.6.3</mapstruct.version>
+    <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+
+    <!-- Plugin Versions -->
+    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+    <maven-javadoc-plugin.version>3.10.1</maven-javadoc-plugin.version>
+    <maven-pmd-plugin.version>3.26.0</maven-pmd-plugin.version>
+    <maven-project-info-reports-plugin.version>3.7.0</maven-project-info-reports-plugin.version>
+
+    <!-- Test Settings -->
+    <maven.test.skip>false</maven.test.skip>
+    <micrometer.version>1.14.2</micrometer.version>
+    <minio.version>8.6.0</minio.version>
+    <mybatis-plus.version>3.5.9</mybatis-plus.version>
+    <okhttp.version>4.12.0</okhttp.version>
+    <pact.version>4.6.5</pact.version>
+    <pitest-junit5.version>1.2.1</pitest-junit5.version>
+    <pitest.version>1.15.3</pitest.version>
+    <pmd.version>7.9.0</pmd.version>
+    <postgresql.version>42.7.3</postgresql.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <redisson.version>3.40.2</redisson.version>
+    <rest-assured.version>5.4.0</rest-assured.version>
+    <sa-token.version>1.39.0</sa-token.version>
+    <sb-contrib.version>7.6.8</sb-contrib.version>
+    <skipTests>false</skipTests>
+    <spotbugs-maven-plugin.version>4.8.7.0</spotbugs-maven-plugin.version>
+    <spotbugs.version>4.8.7</spotbugs.version>
+    <spotless.version>2.44.0</spotless.version>
+    <swagger-annotations.version>2.2.28</swagger-annotations.version>
+    <spring-cloud-alibaba.version>2023.0.1.3</spring-cloud-alibaba.version>
+
+    <!-- Test Groups Configuration -->
+    <!-- 默认排除需要特殊环境的测试 -->
+    <test.groups/>
+    <test.excludedGroups>integration,e2e,contract,architecture</test.excludedGroups>
+
+    <!-- Spring Cloud Versions -->
+    <spring-cloud.version>2024.0.0</spring-cloud.version>
+
+    <!-- Dependency Versions -->
+    <springdoc.version>2.7.0</springdoc.version>
+
+    <!-- Test Framework Versions -->
+    <testcontainers.version>1.20.4</testcontainers.version>
+    <mybatis-spring-boot-starter-test.version>3.0.4</mybatis-spring-boot-starter-test.version>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
-      <!-- Internal Modules -->
+
+      <!-- Spring Cloud Alibaba -->
       <dependency>
-        <groupId>com.zhangzhankui.samples</groupId>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+        <version>${spring-cloud-alibaba.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- Spring Cloud -->
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Testcontainers -->
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>${testcontainers.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Sa-Token -->
+      <dependency>
+        <groupId>cn.dev33</groupId>
+        <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
+        <version>${sa-token.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.dev33</groupId>
+        <artifactId>sa-token-redis-jackson</artifactId>
+        <version>${sa-token.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.dev33</groupId>
+        <artifactId>sa-token-spring-boot3-starter</artifactId>
+        <version>${sa-token.version}</version>
+      </dependency>
+
+      <!-- Druid -->
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-3-starter</artifactId>
+        <version>${druid.version}</version>
+      </dependency>
+
+      <!-- Dynamic Datasource -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+        <version>${dynamic-datasource.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-jsqlparser</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+
+      <!-- MyBatis Plus -->
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+
+      <!-- OkHttp (required by MinIO 8.6.0+) -->
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>okhttp</artifactId>
+        <version>${okhttp.version}</version>
+      </dependency>
+
+      <!-- Internal Common Modules -->
+      <dependency>
+        <groupId>com.zhangzhankui.seed</groupId>
         <artifactId>common-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.zhangzhankui.samples</groupId>
-        <artifactId>common-web</artifactId>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>common-datasource</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.zhangzhankui.samples</groupId>
-        <artifactId>common-security</artifactId>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>common-file</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.zhangzhankui.samples</groupId>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>common-log</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.zhangzhankui.seed</groupId>
         <artifactId>common-redis</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.zhangzhankui.samples</groupId>
-        <artifactId>samples-interface</artifactId>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>common-rpc</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.zhangzhankui.samples</groupId>
-        <artifactId>samples-db</artifactId>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>common-security</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.zhangzhankui.samples</groupId>
-        <artifactId>samples-service</artifactId>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>common-swagger</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
-      <!-- SpringDoc OpenAPI -->
       <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        <version>${springdoc.version}</version>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>common-web</artifactId>
+        <version>${project.version}</version>
       </dependency>
-      
+
+      <!-- Business Module APIs -->
+      <dependency>
+        <groupId>com.zhangzhankui.seed</groupId>
+        <artifactId>system-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- MinIO -->
+      <dependency>
+        <groupId>io.minio</groupId>
+        <artifactId>minio</artifactId>
+        <version>${minio.version}</version>
+      </dependency>
+
+      <!-- Swagger Annotations -->
+      <dependency>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-annotations-jakarta</artifactId>
+        <version>${swagger-annotations.version}</version>
+      </dependency>
+
+      <!-- Utils -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
+      </dependency>
+
       <!-- MapStruct -->
       <dependency>
         <groupId>org.mapstruct</groupId>
@@ -106,40 +274,96 @@
         <artifactId>mapstruct-processor</artifactId>
         <version>${mapstruct.version}</version>
       </dependency>
-      
-      <!-- JWT -->
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-api</artifactId>
-        <version>${jwt.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-impl</artifactId>
-        <version>${jwt.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.jsonwebtoken</groupId>
-        <artifactId>jjwt-jackson</artifactId>
-        <version>${jwt.version}</version>
-      </dependency>
-      
-      <!-- Utils -->
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>${commons-lang3.version}</version>
-      </dependency>
-      
+
       <!-- Database -->
       <dependency>
-        <groupId>com.mysql</groupId>
-        <artifactId>mysql-connector-j</artifactId>
-        <version>${mysql.version}</version>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${postgresql.version}</version>
+      </dependency>
+
+      <!-- Redisson -->
+      <dependency>
+        <groupId>org.redisson</groupId>
+        <artifactId>redisson-spring-boot-starter</artifactId>
+        <version>${redisson.version}</version>
+      </dependency>
+      <!-- SpringDoc OpenAPI -->
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+        <version>${springdoc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        <version>${springdoc.version}</version>
+      </dependency>
+
+      <!-- ========== Testing ========== -->
+
+      <!-- Pact -->
+      <dependency>
+        <groupId>au.com.dius.pact.consumer</groupId>
+        <artifactId>junit5</artifactId>
+        <version>${pact.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>au.com.dius.pact.provider</groupId>
+        <artifactId>junit5</artifactId>
+        <version>${pact.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- ArchUnit -->
+      <dependency>
+        <groupId>com.tngtech.archunit</groupId>
+        <artifactId>archunit-junit5</artifactId>
+        <version>${archunit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- REST-assured -->
+      <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>${rest-assured.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Awaitility -->
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- MyBatis Spring Boot Test -->
+      <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter-test</artifactId>
+        <version>${mybatis-spring-boot-starter-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- JMH Benchmark -->
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-core</artifactId>
+        <version>${jmh.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-generator-annprocess</artifactId>
+        <version>${jmh.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <dependencies>
     <!-- Lombok (Global) -->
     <dependency>
@@ -147,8 +371,8 @@
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
-    
-    <!-- Test -->
+
+    <!-- Testing Dependencies (Global) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -156,9 +380,192 @@
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>aliyun</id>
+      <name>Aliyun Maven Repository</name>
+      <url>https://maven.aliyun.com/repository/public</url>
+    </repository>
+  </repositories>
+
   <build>
     <pluginManagement>
       <plugins>
+
+        <!-- Spotless -->
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${spotless.version}</version>
+          <configuration>
+            <java>
+              <googleJavaFormat>
+                <version>${google-java-format.version}</version>
+                <reflowLongStrings>true</reflowLongStrings>
+                <formatJavadoc>true</formatJavadoc>
+              </googleJavaFormat>
+              <removeUnusedImports/>
+              <importOrder>
+                <order>\#static\#,java|javax,*,!com.zhangzhankui.*,com.zhangzhankui.*</order>
+              </importOrder>
+              <trimTrailingWhitespace/>
+              <endWithNewline/>
+            </java>
+            <pom>
+              <includes>
+                <include>pom.xml</include>
+                <include>**/pom.xml</include>
+              </includes>
+              <sortPom>
+                <expandEmptyElements>false</expandEmptyElements>
+                <nrOfIndentSpace>2</nrOfIndentSpace>
+                <sortDependencies>scope,groupId,artifactId</sortDependencies>
+                <sortPlugins>groupId,artifactId</sortPlugins>
+                <sortProperties>true</sortProperties>
+              </sortPom>
+            </pom>
+            <markdown>
+              <includes>
+                <include>**/*.md</include>
+              </includes>
+              <excludes>
+                <exclude>**/target/**</exclude>
+              </excludes>
+              <flexmark/>
+            </markdown>
+            <yaml>
+              <includes>
+                <include>**/*.yml</include>
+                <include>**/*.yaml</include>
+              </includes>
+              <excludes>
+                <exclude>**/target/**</exclude>
+                <exclude>**/templates/**</exclude>
+                <exclude>**/helm/**/templates/**</exclude>
+              </excludes>
+              <jackson/>
+            </yaml>
+            <json>
+              <includes>
+                <include>**/*.json</include>
+              </includes>
+              <excludes>
+                <exclude>**/target/**</exclude>
+                <exclude>**/node_modules/**</exclude>
+                <exclude>**/.vscode/**</exclude>
+              </excludes>
+              <jackson/>
+            </json>
+          </configuration>
+          <executions>
+            <execution>
+              <id>spotless-check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>validate</phase>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- SpotBugs -->
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs-maven-plugin.version}</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Medium</threshold>
+            <failOnError>false</failOnError>
+            <xmlOutput>true</xmlOutput>
+            <xmlOutputDirectory>${project.build.directory}/spotbugs</xmlOutputDirectory>
+            <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs</spotbugsXmlOutputDirectory>
+            <excludeFilterFile>ops/tooling/spotbugs/spotbugs-exclude.xml</excludeFilterFile>
+            <annotationSuppression>true</annotationSuppression>
+            <onlyAnalyze>com.zhangzhankui.seed.-</onlyAnalyze>
+            <plugins>
+              <plugin>
+                <groupId>com.h3xstream.findsecbugs</groupId>
+                <artifactId>findsecbugs-plugin</artifactId>
+                <version>${findsecbugs.version}</version>
+              </plugin>
+              <plugin>
+                <groupId>com.mebigfatguy.sb-contrib</groupId>
+                <artifactId>sb-contrib</artifactId>
+                <version>${sb-contrib.version}</version>
+              </plugin>
+            </plugins>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.github.spotbugs</groupId>
+              <artifactId>spotbugs</artifactId>
+              <version>${spotbugs.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>spotbugs-check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>verify</phase>
+            </execution>
+          </executions>
+        </plugin>
+        <!-- Docker Plugin -->
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>${docker.plugin.version}</version>
+        </plugin>
+
+        <!-- ========== 代码质量检查插件 ========== -->
+
+        <!-- Checkstyle -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${maven-checkstyle-plugin.version}</version>
+          <configuration>
+            <configLocation>ops/tooling/checkstyle/checkstyle.xml</configLocation>
+            <suppressionsLocation>ops/tooling/checkstyle/suppressions.xml</suppressionsLocation>
+            <consoleOutput>true</consoleOutput>
+            <failsOnError>false</failsOnError>
+            <failOnViolation>false</failOnViolation>
+            <violationSeverity>warning</violationSeverity>
+            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+            <linkXRef>false</linkXRef>
+            <encoding>UTF-8</encoding>
+            <outputDirectory>${project.build.directory}/checkstyle</outputDirectory>
+            <cacheFile>${project.build.directory}/checkstyle-cachefile</cacheFile>
+            <excludes>**/generated-sources/**/*,**/generated-test-sources/**/*</excludes>
+            <logViolationsToConsole>true</logViolationsToConsole>
+            <maxAllowedViolations>0</maxAllowedViolations>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${checkstyle.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>checkstyle-check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>validate</phase>
+            </execution>
+          </executions>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -189,6 +596,204 @@
             </annotationProcessorPaths>
           </configuration>
         </plugin>
+
+        <!-- Failsafe (Integration Tests) -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <configuration>
+            <argLine>@{argLine} -Xmx1024m</argLine>
+            <includes>
+              <include>**/*IT.java</include>
+              <include>**/*IntegrationTest.java</include>
+            </includes>
+            <groups>integration</groups>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- PMD -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>${maven-pmd-plugin.version}</version>
+          <configuration>
+            <rulesets>
+              <ruleset>ops/tooling/pmd/pmd-ruleset.xml</ruleset>
+            </rulesets>
+            <failOnViolation>false</failOnViolation>
+            <printFailingErrors>true</printFailingErrors>
+            <linkXRef>false</linkXRef>
+            <sourceEncoding>UTF-8</sourceEncoding>
+            <targetJdk>${java.version}</targetJdk>
+            <targetDirectory>${project.build.directory}/pmd</targetDirectory>
+            <excludeRoots>
+              <excludeRoot>target/generated-sources</excludeRoot>
+              <excludeRoot>target/generated-test-sources</excludeRoot>
+            </excludeRoots>
+            <includeTests>false</includeTests>
+            <verbose>true</verbose>
+            <analysisCache>true</analysisCache>
+            <analysisCacheLocation>${project.build.directory}/pmd/pmd-cache.bin</analysisCacheLocation>
+            <minimumTokens>100</minimumTokens>
+            <ignoreLiterals>true</ignoreLiterals>
+            <ignoreIdentifiers>true</ignoreIdentifiers>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-core</artifactId>
+              <version>${pmd.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>net.sourceforge.pmd</groupId>
+              <artifactId>pmd-java</artifactId>
+              <version>${pmd.version}</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>pmd-check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <phase>validate</phase>
+            </execution>
+            <execution>
+              <id>cpd-check</id>
+              <goals>
+                <goal>cpd-check</goal>
+              </goals>
+              <phase>validate</phase>
+              <configuration>
+                <failOnViolation>false</failOnViolation>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Surefire (Unit Tests) -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <argLine>@{argLine} -Xmx1024m</argLine>
+            <includes>
+              <include>**/*Test.java</include>
+              <include>**/*Tests.java</include>
+            </includes>
+            <groups>${test.groups}</groups>
+            <excludedGroups>${test.excludedGroups}</excludedGroups>
+          </configuration>
+        </plugin>
+
+        <!-- JaCoCo Plugin for Code Coverage -->
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco.version}</version>
+          <executions>
+            <execution>
+              <id>prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>report</id>
+              <goals>
+                <goal>report</goal>
+              </goals>
+              <phase>test</phase>
+            </execution>
+            <execution>
+              <id>check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <haltOnFailure>true</haltOnFailure>
+                <rules>
+                  <rule>
+                    <element>BUNDLE</element>
+                    <limits>
+                      <limit>
+                        <counter>LINE</counter>
+                        <value>COVEREDRATIO</value>
+                        <minimum>0.60</minimum>
+                      </limit>
+                      <limit>
+                        <counter>BRANCH</counter>
+                        <value>COVEREDRATIO</value>
+                        <minimum>0.50</minimum>
+                      </limit>
+                    </limits>
+                  </rule>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Pitest (Mutation Testing) -->
+        <plugin>
+          <groupId>org.pitest</groupId>
+          <artifactId>pitest-maven</artifactId>
+          <version>${pitest.version}</version>
+          <configuration>
+            <targetClasses>
+              <param>com.zhangzhankui.seed.*.service.*</param>
+              <param>com.zhangzhankui.seed.*.controller.*</param>
+              <param>com.zhangzhankui.seed.common.core.utils.*</param>
+            </targetClasses>
+            <targetTests>
+              <param>com.zhangzhankui.seed.*Test</param>
+              <param>com.zhangzhankui.seed.*Tests</param>
+            </targetTests>
+            <excludedClasses>
+              <param>com.zhangzhankui.seed.*.config.*</param>
+              <param>com.zhangzhankui.seed.*.domain.*</param>
+              <param>com.zhangzhankui.seed.*.entity.*</param>
+              <param>com.zhangzhankui.seed.*Application</param>
+            </excludedClasses>
+            <mutators>
+              <mutator>STRONGER</mutator>
+            </mutators>
+            <mutationThreshold>60</mutationThreshold>
+            <coverageThreshold>70</coverageThreshold>
+            <outputFormats>
+              <outputFormat>HTML</outputFormat>
+              <outputFormat>XML</outputFormat>
+            </outputFormats>
+            <timeoutConstant>8000</timeoutConstant>
+            <threads>4</threads>
+            <historyInputFile>target/pit-history.bin</historyInputFile>
+            <historyOutputFile>target/pit-history.bin</historyOutputFile>
+            <excludedTestClasses>
+              <param>*IntegrationTest</param>
+              <param>*IT</param>
+              <param>*E2ETest</param>
+              <param>*EndToEndTest</param>
+              <param>*ContractTest</param>
+              <param>*Benchmark</param>
+            </excludedTestClasses>
+            <timestampedReports>false</timestampedReports>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.pitest</groupId>
+              <artifactId>pitest-junit5-plugin</artifactId>
+              <version>${pitest-junit5.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
@@ -200,23 +805,283 @@
               </exclude>
             </excludes>
           </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
   </build>
 
-  <repositories>
-    <repository>
-      <id>aliyun</id>
-      <name>Aliyun Maven Repository</name>
-      <url>https://maven.aliyun.com/repository/public</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
+  <!-- ========== 报告 ========== -->
+  <reporting>
+    <plugins>
+      <!-- SpotBugs -->
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${spotbugs-maven-plugin.version}</version>
+        <configuration>
+          <effort>Max</effort>
+          <threshold>Medium</threshold>
+          <xmlOutput>true</xmlOutput>
+          <excludeFilterFile>ops/tooling/spotbugs/spotbugs-exclude.xml</excludeFilterFile>
+          <plugins>
+            <plugin>
+              <groupId>com.h3xstream.findsecbugs</groupId>
+              <artifactId>findsecbugs-plugin</artifactId>
+              <version>${findsecbugs.version}</version>
+            </plugin>
+            <plugin>
+              <groupId>com.mebigfatguy.sb-contrib</groupId>
+              <artifactId>sb-contrib</artifactId>
+              <version>${sb-contrib.version}</version>
+            </plugin>
+          </plugins>
+        </configuration>
+      </plugin>
+
+      <!-- Checkstyle -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${maven-checkstyle-plugin.version}</version>
+        <configuration>
+          <configLocation>ops/tooling/checkstyle/checkstyle.xml</configLocation>
+          <suppressionsLocation>ops/tooling/checkstyle/suppressions.xml</suppressionsLocation>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <!-- Javadoc -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven-javadoc-plugin.version}</version>
+        <configuration>
+          <source>${java.version}</source>
+          <quiet>true</quiet>
+          <doclint>none</doclint>
+        </configuration>
+      </plugin>
+
+      <!-- PMD -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${maven-pmd-plugin.version}</version>
+        <configuration>
+          <rulesets>
+            <ruleset>ops/tooling/pmd/pmd-ruleset.xml</ruleset>
+          </rulesets>
+          <targetJdk>${java.version}</targetJdk>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>pmd</report>
+              <report>cpd</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <!-- Maven 项目信息 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>${maven-project-info-reports-plugin.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>index</report>
+              <report>summary</report>
+              <report>dependencies</report>
+              <report>dependency-info</report>
+              <report>plugins</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+
+      <!-- JaCoCo -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
+
+  <!-- ========== Maven Profiles ========== -->
+  <profiles>
+    <!-- 代码质量检查 Profile -->
+    <profile>
+      <id>code-quality</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- 代码质量报告 Profile -->
+    <profile>
+      <id>quality-report</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>spotbugs-report</id>
+                <goals>
+                  <goal>spotbugs</goal>
+                </goals>
+                <phase>verify</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>checkstyle-report</id>
+                <goals>
+                  <goal>checkstyle</goal>
+                </goals>
+                <phase>verify</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>pmd-report</id>
+                <goals>
+                  <goal>pmd</goal>
+                  <goal>cpd</goal>
+                </goals>
+                <phase>verify</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- 格式化代码 Profile -->
+    <profile>
+      <id>format</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>spotless-apply</id>
+                <goals>
+                  <goal>apply</goal>
+                </goals>
+                <phase>validate</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- 跳过代码检查 Profile (用于快速构建) -->
+    <profile>
+      <id>skip-checks</id>
+      <properties>
+        <checkstyle.skip>true</checkstyle.skip>
+        <cpd.skip>true</cpd.skip>
+        <jacoco.skip>true</jacoco.skip>
+        <pmd.skip>true</pmd.skip>
+        <spotbugs.skip>true</spotbugs.skip>
+        <spotless.check.skip>true</spotless.check.skip>
+      </properties>
+    </profile>
+
+    <!-- CI/CD Profile -->
+    <profile>
+      <id>ci</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <configuration>
+              <failOnError>true</failOnError>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <configuration>
+              <failOnViolation>true</failOnViolation>
+              <violationSeverity>error</violationSeverity>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <configuration>
+              <failOnViolation>true</failOnViolation>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- 严格模式 Profile（所有检查都会导致构建失败）-->
+    <profile>
+      <id>strict</id>
+      <properties>
+        <checkstyle.failOnViolation>true</checkstyle.failOnViolation>
+        <checkstyle.violationSeverity>warning</checkstyle.violationSeverity>
+        <pmd.failOnViolation>true</pmd.failOnViolation>
+        <spotbugs.failOnError>true</spotbugs.failOnError>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>

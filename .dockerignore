@@ -1,0 +1,76 @@
+# .dockerignore
+# 忽略不需要复制到 Docker 镜像的文件
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+*.iml
+.vscode
+*.swp
+*.swo
+
+# Build outputs
+**/target/
+**/build/
+**/out/
+
+# Logs
+**/logs/
+**/*.log
+
+# Test files
+**/*.test.js
+**/*.spec.js
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Nx cache & build artifacts
+.nx/
+node_modules/
+output.html
+static/
+
+# Keep package manager files (needed for frontend Docker builds)
+# package.json — NOT excluded (frontend Dockerfile needs it)
+# pnpm-lock.yaml — NOT excluded (frontend Dockerfile needs it)
+# pnpm-workspace.yaml — NOT excluded (frontend Dockerfile needs it)
+
+# Nx scripts (not needed in images)
+nx
+nx.bat
+nx.json
+
+# Ops (运维配置，应用镜像不需要)
+ops/
+
+# Docker & K8s configs at root only (应用子目录的保留)
+/docker-compose*.yml
+/skaffold.yaml
+/.dockerignore
+
+# GitHub
+.github/
+
+# Environment files
+.env*
+*.env
+
+# Coverage
+coverage/
+.nyc_output/
+
+# macOS
+.DS_Store
+
+# Local config
+local.properties
+application-local.yml
+
+# Maven wrapper (可选，如果 Dockerfile 用系统 Maven)
+# .mvn/

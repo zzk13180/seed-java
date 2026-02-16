@@ -1,0 +1,84 @@
+{
+  "installation": {
+    "version": "22.4.4"
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "plugins": ["@nx/maven", "@nx/vite"],
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "cache": true
+    },
+    "compile": {
+      "dependsOn": ["^compile"],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["build", "compile"],
+      "cache": true
+    },
+    "verify": {
+      "dependsOn": ["build", "compile"],
+      "cache": true
+    },
+    "dev": {
+      "cache": false
+    },
+    "lint": {
+      "cache": true,
+      "inputs": ["default", "{projectRoot}/.eslintrc*", "{projectRoot}/eslint.config.*"]
+    },
+    "type-check": {
+      "cache": true,
+      "inputs": ["default", "{projectRoot}/tsconfig*.json"]
+    }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [
+      "{workspaceRoot}/ops/tooling/**/*",
+      "{workspaceRoot}/pom.xml",
+      "{workspaceRoot}/pnpm-lock.yaml"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*Test.java",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/**/test/**",
+      "!{projectRoot}/**/__tests__/**",
+      "!{projectRoot}/**/coverage/**",
+      "!{projectRoot}/**/*.md"
+    ],
+    "javaSource": [
+      "{projectRoot}/src/main/**/*.java",
+      "{projectRoot}/pom.xml",
+      "sharedGlobals"
+    ],
+    "javaTest": [
+      "{projectRoot}/src/test/**/*.java",
+      "javaSource"
+    ],
+    "frontendSource": [
+      "{projectRoot}/src/**/*.{ts,vue,tsx,jsx}",
+      "!{projectRoot}/src/**/*.{spec,test}.{ts,tsx}",
+      "!{projectRoot}/src/**/__tests__/**",
+      "{projectRoot}/package.json",
+      "{projectRoot}/tsconfig.json",
+      "{projectRoot}/vite.config.ts",
+      "sharedGlobals"
+    ],
+    "frontendTest": [
+      "{projectRoot}/src/**/*.{spec,test}.{ts,tsx}",
+      "{projectRoot}/src/**/__tests__/**",
+      "{projectRoot}/vitest.config.ts",
+      "frontendSource"
+    ],
+    "frontendLint": [
+      "frontendSource",
+      "{projectRoot}/eslint.config.*",
+      "{projectRoot}/.eslintrc*"
+    ]
+  },
+  "defaultBase": "main"
+}

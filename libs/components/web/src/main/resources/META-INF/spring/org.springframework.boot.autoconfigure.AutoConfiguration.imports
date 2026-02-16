@@ -1,0 +1,4 @@
+com.zhangzhankui.seed.common.web.config.JacksonConfig
+com.zhangzhankui.seed.common.web.config.ActuatorHealthConfig
+com.zhangzhankui.seed.common.web.aspect.RateLimiterAspect
+com.zhangzhankui.seed.common.web.aspect.RepeatSubmitAspect

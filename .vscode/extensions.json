@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    // Nx Console（可视化管理和运行 Nx 工作区中的任务）
+    "nrwl.angular-console",
+
+    // ========== Java 开发 ==========
+    // Java 扩展包（代码补全、语法检查、重构等）
+    "vscjava.vscode-java-pack",
+    // Spring Boot 扩展包
+    // "vmware.vscode-boot-dev-pack",
+
+    // ========== 容器和编排（可选） ==========
+    // Docker 官方扩展
+    // "ms-azuretools.vscode-docker",
+    // Kubernetes 官方扩展
+    // "ms-kubernetes-tools.vscode-kubernetes-tools",
+
+    // XML 格式化
+    "redhat.vscode-xml",
+    // YAML 格式化
+    "redhat.vscode-yaml"
+  ],
+  "unwantedRecommendations": []
+}

@@ -1,0 +1,10 @@
+# OpenAPI Generator - Ignore File
+# 不覆盖手写的 API 文件
+src/api/auth.api.ts
+src/api/menu.api.ts
+src/api/user.api.ts
+src/api/stats.api.ts
+src/api/types.ts
+
+# 不覆盖 .gitignore
+.gitignore

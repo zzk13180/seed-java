@@ -1,0 +1,46 @@
+{
+  "name": "seed-cloud",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Enterprise Java Microservices Seed Project",
+  "//": [
+    "本项目使用 Nx 管理任务，请直接使用 nx 命令：",
+    "",
+    "pnpm nx dev @seed-cloud/frontend   — 启动前端",
+    "pnpm nx dev gateway                — 启动网关",
+    "pnpm nx dev auth-service           — 启动认证服务",
+    "pnpm nx dev system-service         — 启动系统服务",
+    "pnpm nx run-many -t build          — 构建所有项目",
+    "pnpm nx run-many -t test           — 测试所有项目",
+    "pnpm nx run-many -t compile        — 编译所有项目",
+    "pnpm nx affected -t build          — 仅构建受影响的项目",
+    "pnpm nx affected -t test           — 仅测试受影响的项目",
+    "pnpm nx graph                      — 查看依赖图"
+  ],
+  "scripts": {
+    "infra": "ops/deployment/scripts/docker-dev.sh infra",
+    "dev:backend": "nx run-many -t dev -p gateway auth-service system-service --parallel=3 --output-style=stream",
+    "predev:backend": "for p in 8080 8081 8082; do pids=$(lsof -tiTCP:$p -sTCP:LISTEN); if [ -n \"$pids\" ]; then kill $pids; fi; done",
+    "dev:frontend": "nx dev @seed-cloud/frontend",
+    "mvn:install": "mvn clean install -DskipTests"
+  },
+  "devDependencies": {
+    "@nx/maven": "^22.4.4",
+    "@nx/vite": "^22.4.4",
+    "@nx/vitest": "22.4.4",
+    "concurrently": "^9.2.1",
+    "nx": "^22.4.4"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@tailwindcss/oxide",
+      "esbuild",
+      "nx",
+      "vue-demi"
+    ]
+  }
+}

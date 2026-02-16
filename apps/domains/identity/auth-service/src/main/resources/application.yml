@@ -1,0 +1,104 @@
+---
+server:
+  port: 8081
+spring:
+  application:
+    name: "seed-auth"
+  profiles:
+    active: "${SPRING_PROFILES_ACTIVE:dev}"
+  threads:
+    virtual:
+      enabled: true
+  cloud:
+    nacos:
+      username: "${NACOS_USERNAME:nacos}"
+      password: "${NACOS_PASSWORD:nacos}"
+      discovery:
+        server-addr: "${NACOS_SERVER_ADDR:localhost:8848}"
+        namespace: "${NACOS_NAMESPACE:}"
+        # 开发环境下，网关实例注册为本机地址，防止服务发现时出现无法访问的问题，生产环境请确保正确配置该值
+        ip: "${NACOS_DISCOVERY_IP:127.0.0.1}"
+      config:
+        enabled: "${NACOS_CONFIG_ENABLED:false}"
+        server-addr: "${NACOS_SERVER_ADDR:localhost:8848}"
+        namespace: "${NACOS_NAMESPACE:}"
+        file-extension: yaml
+        shared-configs:
+          - data-id: application-shared.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+          - data-id: application-redis.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+  data:
+    redis:
+      host: "${REDIS_HOST:localhost}"
+      port: "${REDIS_PORT:6379}"
+      database: 0
+      lettuce:
+        pool:
+          max-active: 16
+          max-idle: 8
+          min-idle: 2
+          max-wait: "1000ms"
+        shutdown-timeout: "100ms"
+sa-token:
+  token-name: "Authorization"
+  timeout: 86400
+  active-timeout: -1
+  is-concurrent: true
+  is-share: true
+  token-prefix: "Bearer"
+  is-read-header: true
+  is-read-cookie: true
+  cookie:
+    path: "/"
+    secure: ${server.servlet.cookie.secure:false}
+    http-only: true
+    same-site: "Lax"
+seed:
+  auth:
+    provider: "${AUTH_PROVIDER:satoken}"
+    oauth2:
+      issuer-uri: "${OAUTH2_ISSUER_URI:https://your-logto-instance.logto.app/oidc}"
+      client-id: "${OAUTH2_CLIENT_ID:your-client-id}"
+      client-secret: "${OAUTH2_CLIENT_SECRET:your-client-secret}"
+      frontend-redirect-uri: "${FRONTEND_REDIRECT_URI:http://localhost:3000/auth/callback}"
+  security:
+    inner-auth-secret: "${INNER_AUTH_SECRET:dev-inner-auth-secret-change-in-production}"
+    login:
+      max-fail-attempts: 5
+      lock-duration: 30
+      fail-count-reset-duration: 10
+      ip-rate-limit-enabled: true
+      ip-rate-limit-window: 60
+      ip-rate-limit-max: 10
+      login-log-enabled: true
+spring.security.oauth2.client:
+  registration:
+    logto:
+      client-id: "${OAUTH2_CLIENT_ID:your-client-id}"
+      client-secret: "${OAUTH2_CLIENT_SECRET:your-client-secret}"
+      scope: "openid,profile,email,offline_access"
+      authorization-grant-type: "authorization_code"
+      redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+  provider:
+    logto:
+      issuer-uri: "${OAUTH2_ISSUER_URI:https://your-logto-instance.logto.app/oidc}"
+rpc:
+  client:
+    connect-timeout: 5000
+    read-timeout: 10000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics"
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+logging:
+  level:
+    '[com.zhangzhankui.seed]': "info"

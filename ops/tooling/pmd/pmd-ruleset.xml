@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+<ruleset name="Seed Cloud PMD Rules"
+  xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+  <description>
+    Seed Java 项目的 PMD 规则集
+    基于 PMD 7.x 和现代 Java 21 最佳实践配置
+    适配 Spring Boot 3.x 微服务架构
+  </description>
+
+  <!-- ========== 最佳实践规则 ========== -->
+  <rule ref="category/java/bestpractices.xml">
+    <!-- 排除在 Spring 项目中不适用的规则 -->
+    <exclude name="GuardLogStatement" />
+    <!-- 允许使用 JUnit 5 的断言 -->
+    <exclude name="JUnitTestContainsTooManyAsserts" />
+    <!-- 允许使用 @Autowired 字段注入（虽然推荐构造器注入）-->
+    <exclude name="UnusedPrivateField" />
+  </rule>
+
+  <!-- 避免重新分配参数 -->
+  <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters">
+    <properties>
+      <property name="violationSuppressXPath" value="//MethodDeclaration[@Name='set.*']" />
+    </properties>
+  </rule>
+
+  <!-- JUnit 断言应该包含消息 -->
+  <rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage">
+    <properties>
+      <property name="violationSuppressRegex" value=".*" />
+    </properties>
+  </rule>
+
+  <!-- ========== 代码风格规则 ========== -->
+  <rule ref="category/java/codestyle.xml">
+    <!-- 排除过于严格的规则 -->
+    <exclude name="AtLeastOneConstructor" />
+    <exclude name="OnlyOneReturn" />
+    <exclude name="CommentDefaultAccessModifier" />
+    <exclude name="TooManyStaticImports" />
+    <exclude name="LongVariable" />
+    <exclude name="ShortVariable" />
+    <exclude name="ShortClassName" />
+    <exclude name="ShortMethodName" />
+    <exclude name="CallSuperInConstructor" />
+    <exclude name="ConfusingTernary" />
+    <exclude name="UseExplicitTypes" />
+    <exclude name="LocalVariableCouldBeFinal" />
+    <exclude name="MethodArgumentCouldBeFinal" />
+    <exclude name="LinguisticNaming" />
+    <!-- Java 21 var 关键字支持 -->
+    <exclude name="LocalVariableNamingConventions" />
+    <!-- 允许使用下划线命名（如 _unused）-->
+    <exclude name="AvoidFinalLocalVariable" />
+    <!-- 允许 record 类没有显式构造器 -->
+    <exclude name="UnnecessaryConstructor" />
+  </rule>
+
+  <!-- 类名必须与文件名匹配 -->
+  <rule ref="category/java/codestyle.xml/ClassNamingConventions">
+    <properties>
+      <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Constants?)" />
+      <!-- 允许抽象类以 Abstract 或 Base 开头 -->
+      <property name="abstractClassPattern" value="^(Abstract|Base)[A-Z][a-zA-Z0-9]*$" />
+    </properties>
+  </rule>
+
+  <!-- 字段命名约定 -->
+  <rule ref="category/java/codestyle.xml/FieldNamingConventions">
+    <properties>
+      <!-- 允许 logger/log 作为常量名 -->
+      <property name="constantPattern" value="^log(ger)?$|^[A-Z][A-Z_0-9]*$" />
+    </properties>
+  </rule>
+
+  <!-- 方法命名约定 -->
+  <rule ref="category/java/codestyle.xml/MethodNamingConventions">
+    <properties>
+      <!-- 允许测试方法使用下划线命名 -->
+      <property name="junit5TestPattern" value="[a-z][a-zA-Z0-9_]*" />
+    </properties>
+  </rule>
+
+  <!-- ========== 设计规则 ========== -->
+  <rule ref="category/java/design.xml">
+    <!-- 排除过于严格的规则 -->
+    <exclude name="LawOfDemeter" />
+    <exclude name="LoosePackageCoupling" />
+    <exclude name="DataClass" />
+    <exclude name="TooManyMethods" />
+    <exclude name="ExcessiveImports" />
+    <exclude name="AvoidCatchingGenericException" />
+    <exclude name="SignatureDeclareThrowsException" />
+    <exclude name="UseObjectForClearerAPI" />
+    <exclude name="UseUtilityClass" />
+    <exclude name="AbstractClassWithoutAbstractMethod" />
+    <exclude name="TooManyFields" />
+    <!-- 允许复杂的 switch 表达式（Java 21）-->
+    <exclude name="CyclomaticComplexity" />
+    <exclude name="NPathComplexity" />
+    <!-- 允许深层嵌套（某些业务逻辑需要）-->
+    <exclude name="AvoidDeeplyNestedIfStmts" />
+  </rule>
+
+  <!-- 参数过多 -->
+  <rule ref="category/java/design.xml/ExcessiveParameterList">
+    <properties>
+      <property name="minimum" value="8" />
+    </properties>
+  </rule>
+
+  <!-- 方法过长 -->
+  <rule ref="category/java/design.xml/ExcessiveMethodLength">
+    <properties>
+      <property name="minimum" value="150" />
+    </properties>
+  </rule>
+
+  <!-- 类过长 -->
+  <rule ref="category/java/design.xml/ExcessiveClassLength">
+    <properties>
+      <property name="minimum" value="1500" />
+    </properties>
+  </rule>
+
+  <!-- 圈复杂度（自定义阈值）-->
+  <rule ref="category/java/design.xml/CyclomaticComplexity">
+    <properties>
+      <property name="classReportLevel" value="80" />
+      <property name="methodReportLevel" value="20" />
+    </properties>
+  </rule>
+
+  <!-- 认知复杂度 -->
+  <rule ref="category/java/design.xml/CognitiveComplexity">
+    <properties>
+      <property name="reportLevel" value="25" />
+    </properties>
+  </rule>
+
+  <!-- ========== 文档规则 ========== -->
+  <rule ref="category/java/documentation.xml">
+    <exclude name="CommentRequired" />
+    <exclude name="CommentSize" />
+    <!-- 允许不写 Javadoc（使用良好命名代替）-->
+    <exclude name="UncommentedEmptyMethodBody" />
+  </rule>
+
+  <!-- 注释内容检查 -->
+  <rule ref="category/java/documentation.xml/CommentContent">
+    <properties>
+      <!-- 禁止 TODO/FIXME 注释中包含敏感词 -->
+      <property name="disallowedTerms" value="XXX|HACK" />
+    </properties>
+  </rule>
+
+  <!-- ========== 错误倾向规则 ========== -->
+  <rule ref="category/java/errorprone.xml">
+    <!-- 排除不适用的规则 -->
+    <exclude name="MissingSerialVersionUID" />
+    <exclude name="AvoidLiteralsInIfCondition" />
+    <exclude name="AvoidDuplicateLiterals" />
+    <exclude name="UseLocaleWithCaseConversions" />
+    <exclude name="AvoidFieldNameMatchingMethodName" />
+    <exclude name="NullAssignment" />
+    <!-- 允许在测试中使用 System.out -->
+    <exclude name="DoNotCallSystemExit" />
+    <!-- 允许使用 clone() 方法 -->
+    <exclude name="CloneMethodMustBePublic" />
+    <exclude name="CloneMethodReturnTypeMustMatchClassName" />
+    <!-- 允许捕获 Throwable（框架代码需要）-->
+    <exclude name="AvoidCatchingThrowable" />
+    <!-- 允许使用日期格式化 -->
+    <exclude name="SimpleDateFormatNeedsLocale" />
+  </rule>
+
+  <!-- 空 catch 块 -->
+  <rule ref="category/java/errorprone.xml/EmptyCatchBlock">
+    <properties>
+      <property name="allowCommentedBlocks" value="true" />
+      <property name="allowExceptionNameRegex" value="^(ignored|expected|e|ex)$" />
+    </properties>
+  </rule>
+
+  <!-- 避免字面量重复 -->
+  <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals">
+    <properties>
+      <property name="maxDuplicateLiterals" value="5" />
+      <property name="minimumLength" value="5" />
+      <property name="skipAnnotations" value="true" />
+    </properties>
+  </rule>
+
+  <!-- 避免在条件语句中使用字面量 -->
+  <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
+    <properties>
+      <property name="ignoreMagicNumbers" value="-1,0,1,2" />
+      <property name="ignoreExpressions" value="true" />
+    </properties>
+  </rule>
+
+  <!-- ========== 多线程规则 ========== -->
+  <rule ref="category/java/multithreading.xml">
+    <exclude name="DoNotUseThreads" />
+    <exclude name="UseConcurrentHashMap" />
+    <!-- 允许使用 synchronized 关键字 -->
+    <exclude name="AvoidSynchronizedAtMethodLevel" />
+  </rule>
+
+  <!-- Double-Checked Locking 检查 -->
+  <rule ref="category/java/multithreading.xml/DoubleCheckedLocking">
+    <properties>
+      <property name="violationSuppressRegex" value=".*" />
+    </properties>
+  </rule>
+
+  <!-- ========== 性能规则 ========== -->
+  <rule ref="category/java/performance.xml">
+    <exclude name="AvoidInstantiatingObjectsInLoops" />
+    <!-- 允许使用 String 连接（编译器会优化）-->
+    <exclude name="ConsecutiveAppendsShouldReuse" />
+    <exclude name="InefficientStringBuffering" />
+    <!-- 允许使用 valueOf 方法 -->
+    <exclude name="RedundantFieldInitializer" />
+  </rule>
+
+  <!-- 大数组创建 -->
+  <rule ref="category/java/performance.xml/BigIntegerInstantiation">
+    <properties>
+      <property name="violationSuppressRegex" value=".*" />
+    </properties>
+  </rule>
+
+  <!-- ========== 安全规则 ========== -->
+  <rule ref="category/java/security.xml">
+    <!-- 排除硬编码密钥检测（使用 SpotBugs FindSecBugs 代替）-->
+    <exclude name="HardCodedCryptoKey" />
+  </rule>
+
+</ruleset>

@@ -1,0 +1,251 @@
+{
+  "consumer": {
+    "name": "auth-service"
+  },
+  "interactions": [
+    {
+      "description": "\u83B7\u53D6 admin \u7528\u6237\u4FE1\u606F\u7684\u8BF7\u6C42",
+      "key": "31473c3e",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "\u7528\u6237 admin \u5B58\u5728"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ],
+          "X-From-Source": [
+            "inner"
+          ]
+        },
+        "method": "GET",
+        "path": "/user/info/admin"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "code": 200,
+            "data": {
+              "deptId": 1,
+              "password": "$2a$10$encrypted",
+              "permissions": [
+                "*:*:*"
+              ],
+              "roles": [
+                "admin"
+              ],
+              "userId": 1,
+              "username": "admin"
+            },
+            "message": "success"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.code": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.data.deptId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.data.password": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.permissions[0]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.roles[0]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.data.userId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.data.username": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "\u83B7\u53D6\u4E0D\u5B58\u5728\u7528\u6237\u4FE1\u606F\u7684\u8BF7\u6C42",
+      "key": "bd499bf",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "\u7528\u6237 nonexistent \u4E0D\u5B58\u5728"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ],
+          "X-From-Source": [
+            "inner"
+          ]
+        },
+        "method": "GET",
+        "path": "/user/info/nonexistent"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "code": 200,
+            "data": null,
+            "message": "success"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.code": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    },
+    {
+      "description": "\u7F3A\u5C11 X-From-Source \u5934\u7684\u8BF7\u6C42",
+      "key": "87d56e1c",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "\u7F3A\u5C11\u5185\u90E8\u8BA4\u8BC1\u5934"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/user/info/admin"
+      },
+      "response": {
+        "body": {
+          "content": {
+            "code": 401,
+            "message": "\u5185\u90E8\u8BA4\u8BC1\u5931\u8D25"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.code": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.message": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 401
+      },
+      "transport": "https",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.6.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "system-service"
+  }
+}

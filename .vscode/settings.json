@@ -1,0 +1,58 @@
+{
+  // ========== Java 配置 ==========
+  // 自动更新 Maven 构建配置
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.import.maven.enabled": true,
+  // 启用自动构建（触发 DevTools 热重载）
+  "java.autobuild.enabled": true,
+  "java.import.exclusions": [
+    "**/node_modules/**",
+    "**/.metadata/**",
+    "**/archetype-resources/**",
+    "**/META-INF/maven/**"
+  ],
+  "java.compile.nullAnalysis.mode": "disabled",
+  // 禁用 Java 格式化器，由 Spotless 统一管理
+  "java.format.enabled": false,
+  "java.format.onType.enabled": false,
+
+  // ========== 编辑器配置 ==========
+  // 禁用全局自动格式化，避免与 Spotless 冲突
+  "editor.formatOnSave": false,
+  "editor.defaultFormatter": null,
+  "[java]": {
+    // 禁用 Java 文件的自动格式化，由 Spotless Maven 插件统一管理
+    "editor.defaultFormatter": null,
+    "editor.formatOnSave": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml",
+    "editor.tabSize": 2
+  },
+  "[yaml]": {
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.tabSize": 2
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.associations": {
+    "*.yml": "yaml",
+    "*.yaml": "yaml",
+    "*.properties": "properties",
+    "Dockerfile*": "dockerfile",
+    "docker-compose*.yml": "dockercompose",
+    "docker-compose*.yaml": "dockercompose",
+    ".env*": "dotenv",
+    "pom.xml": "xml",
+    "*.xml": "xml",
+    "*.sql": "sql",
+    "*.sh": "shellscript"
+  }
+}

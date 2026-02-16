@@ -1,0 +1,52 @@
+{
+  "name": "@seed-cloud/frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Seed Cloud SaaS 管理平台前端 (Vue 3 + TypeScript)",
+  "scripts": {
+    "dev": "vite serve --mode development",
+    "build": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "build:prod": "vite build --mode production",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit --skipLibCheck",
+    "lint": "eslint src --fix",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "2.3.2",
+    "element-plus": "2.11.1",
+    "pinia": "3.0.3",
+    "pinia-plugin-persistedstate": "4.2.0",
+    "vue": "3.5.13",
+    "vue-router": "4.5.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.2",
+    "@tailwindcss/vite": "4.1.10",
+    "@types/node": "20.17.50",
+    "@typescript-eslint/eslint-plugin": "8.33.1",
+    "@typescript-eslint/parser": "8.33.1",
+    "@vitejs/plugin-vue": "6.0.0",
+    "@vitest/coverage-v8": "3.2.4",
+    "@vue/test-utils": "2.4.6",
+    "eslint": "9.28.0",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-vue": "9.32.0",
+    "globals": "15.15.0",
+    "happy-dom": "15.11.7",
+    "sass": "1.89.1",
+    "tailwindcss": "4.1.10",
+    "typescript": "5.8.3",
+    "unplugin-auto-import": "19.3.0",
+    "unplugin-vue-components": "28.7.0",
+    "vite": "7.0.0",
+    "vite-plugin-compression": "0.5.1",
+    "vite-plugin-svg-icons": "2.0.1",
+    "vitest": "3.2.4",
+    "vue-eslint-parser": "9.4.3",
+    "vue-tsc": "2.2.10"
+  }
+}

@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN" "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<!--
+    Checkstyle 抑制配置
+    用于排除特定文件或检查项
+    适配 Spring Boot 3.x 微服务项目
+-->
+<suppressions>
+
+  <!-- ========== 生成的代码 ========== -->
+  <suppress files="[\\/]generated-sources[\\/]" checks=".*" />
+  <suppress files="[\\/]generated-test-sources[\\/]" checks=".*" />
+  <suppress files="[\\/]target[\\/]" checks=".*" />
+
+  <!-- MapStruct 生成的 Mapper 实现 -->
+  <suppress files=".*MapperImpl\.java$" checks=".*" />
+
+  <!-- QueryDSL 生成的 Q 类 -->
+  <suppress files="Q[A-Z].*\.java$" checks=".*" />
+
+  <!-- ========== 测试代码 ========== -->
+  <suppress files="Test\.java$" checks="MagicNumber" />
+  <suppress files="Test\.java$" checks="MethodLength" />
+  <suppress files="Test\.java$" checks="LineLength" />
+  <suppress files="Test\.java$" checks="MethodName" />
+  <suppress files="Test\.java$" checks="MultipleStringLiterals" />
+  <suppress files="Test\.java$" checks="JavadocMethod" />
+  <suppress files="Test\.java$" checks="JavadocType" />
+  <suppress files="Test\.java$" checks="CyclomaticComplexity" />
+  <suppress files="Test\.java$" checks="HiddenField" />
+  <suppress files="Test\.java$" checks="OperatorWrap" />
+
+  <suppress files="Tests\.java$" checks="MagicNumber" />
+  <suppress files="Tests\.java$" checks="MethodLength" />
+  <suppress files="Tests\.java$" checks="LineLength" />
+  <suppress files="Tests\.java$" checks="MethodName" />
+  <suppress files="Tests\.java$" checks="OperatorWrap" />
+
+  <suppress files="IT\.java$" checks=".*" />
+  <suppress files="[\\/]test[\\/]" checks="JavadocMethod" />
+  <suppress files="[\\/]test[\\/]" checks="JavadocType" />
+  <suppress files="[\\/]test[\\/]" checks="MagicNumber" />
+  <suppress files="[\\/]test[\\/]" checks="AvoidStarImport" />
+  <suppress files="[\\/]test[\\/]" checks="OperatorWrap" />
+
+  <!-- OperatorWrap 与 Google Java Format 冲突，Spotless 已处理格式化 -->
+  <suppress checks="OperatorWrap" />
+
+  <!-- ========== Entity/DTO/VO 类 ========== -->
+  <suppress files="Entity\.java$" checks="TooManyFields" />
+  <suppress files="Entity\.java$" checks="ParameterNumber" />
+  <suppress files="Entity\.java$" checks="HiddenField" />
+
+  <suppress files="DTO\.java$" checks="TooManyFields" />
+  <suppress files="DTO\.java$" checks="ParameterNumber" />
+  <suppress files="DTO\.java$" checks="HiddenField" />
+
+  <suppress files="VO\.java$" checks="TooManyFields" />
+  <suppress files="VO\.java$" checks="ParameterNumber" />
+  <suppress files="VO\.java$" checks="HiddenField" />
+
+  <suppress files="Request\.java$" checks="TooManyFields" />
+  <suppress files="Response\.java$" checks="TooManyFields" />
+  <suppress files="Query\.java$" checks="TooManyFields" />
+  <suppress files="Param\.java$" checks="TooManyFields" />
+
+  <!-- ========== Application 启动类 ========== -->
+  <suppress files="Application\.java$" checks="HideUtilityClassConstructor" />
+  <suppress files="Application\.java$" checks="UnusedImports" />
+
+  <!-- ========== 配置类 ========== -->
+  <suppress files="Config\.java$" checks="HideUtilityClassConstructor" />
+  <suppress files="Configuration\.java$" checks="HideUtilityClassConstructor" />
+  <suppress files="Properties\.java$" checks="HideUtilityClassConstructor" />
+  <suppress files="Config\.java$" checks="DesignForExtension" />
+  <suppress files="Configuration\.java$" checks="DesignForExtension" />
+
+  <!-- ========== Mapper 接口 ========== -->
+  <suppress files="Mapper\.java$" checks="JavadocMethod" />
+  <suppress files="Mapper\.java$" checks="JavadocType" />
+
+  <!-- ========== 常量类 ========== -->
+  <suppress files="Constants?\.java$" checks="JavadocVariable" />
+  <suppress files="Constants?\.java$" checks="HideUtilityClassConstructor" />
+
+  <!-- ========== 工具类 ========== -->
+  <suppress files="Utils?\.java$" checks="ParameterNumber" />
+  <suppress files="Helper\.java$" checks="ParameterNumber" />
+
+  <!-- ========== 枚举类 ========== -->
+  <suppress files="Enum\.java$" checks="JavadocVariable" />
+
+  <!-- ========== Builder 模式类 ========== -->
+  <suppress files="Builder\.java$" checks="HiddenField" />
+  <suppress files="Builder\.java$" checks="ParameterNumber" />
+
+  <!-- ========== Controller 类 ========== -->
+  <suppress files="Controller\.java$" checks="ParameterNumber" />
+
+  <!-- ========== package-info.java ========== -->
+  <suppress files="package-info\.java$" checks="JavadocPackage" />
+
+</suppressions>

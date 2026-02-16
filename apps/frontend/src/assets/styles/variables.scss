@@ -1,0 +1,47 @@
+/**
+ * CSS 变量定义 — 极简主义风格
+ */
+
+:root {
+  // 主题色 — 低饱和度绿色
+  --seed-primary: #2d9d5e;
+  --seed-primary-light: #e8f5ee;
+  --seed-primary-dark: #1a7a42;
+
+  // 背景色 — 纯净白底
+  --seed-bg-color: #ffffff;
+  --seed-bg-page: #fafafa;
+
+  // 文字颜色 — 高对比层次
+  --seed-text-primary: #18181b;
+  --seed-text-secondary: #71717a;
+  --seed-text-muted: #a1a1aa;
+
+  // 边框颜色 — 几乎消失的分隔线
+  --seed-border-color: #f0f0f0;
+  --seed-border-light: #f5f5f5;
+
+  // 阴影 — 极淡投影
+  --seed-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --seed-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  --seed-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  // 圆角 — 柔和但克制
+  --seed-radius-sm: 6px;
+  --seed-radius: 10px;
+  --seed-radius-lg: 14px;
+
+  // 过渡 — 快速流畅
+  --seed-transition: 0.15s ease;
+}
+
+// 暗色主题
+.dark {
+  --seed-bg-color: #18181b;
+  --seed-bg-page: #09090b;
+  --seed-text-primary: #fafafa;
+  --seed-text-secondary: #a1a1aa;
+  --seed-text-muted: #71717a;
+  --seed-border-color: #27272a;
+  --seed-border-light: #3f3f46;
+}

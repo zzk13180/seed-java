@@ -1,0 +1,93 @@
+---
+# ========================================
+# Docker Compose 生产环境覆盖配置
+# ========================================
+#
+# 使用说明:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml --profile app up -d
+#
+# 与默认配置的差异:
+#   - Nacos 认证强制启用
+#   - Nacos 配置中心启用，服务共享配置从 Nacos 读取
+#   - Redis 密码强制要求
+#   - Spring 激活 prod profile
+#   - Cookie 启用 Secure 属性（HTTPS）
+#   - 关闭不必要的端口暴露
+#   - 容器资源限制
+#
+# 必需的环境变量:
+#   - NACOS_AUTH_TOKEN: Nacos 认证 Token
+#   - NACOS_AUTH_IDENTITY_VALUE: Nacos 身份标识值
+#   - REDIS_PASSWORD: Redis 密码
+#
+# ========================================
+
+services:
+  # ==================== Redis 生产配置 ====================
+  redis:
+    environment:
+      # 生产环境强制要求 Redis 密码
+      REDIS_PASSWORD: "${REDIS_PASSWORD:?REDIS_PASSWORD is required in production}"
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    # 生产环境不对外暴露端口
+    ports: !reset []
+
+  # ==================== Nacos 生产配置 ====================
+  nacos:
+    environment:
+      # 生产环境强制启用认证
+      NACOS_AUTH_ENABLE: "true"
+      # ⚠️ 部署前必须替换为安全的 Token（Base64 编码，>=32 字符）
+      NACOS_AUTH_TOKEN: "${NACOS_AUTH_TOKEN:?NACOS_AUTH_TOKEN is required in production}"
+      NACOS_AUTH_IDENTITY_KEY: "${NACOS_AUTH_IDENTITY_KEY:-serverIdentity}"
+      NACOS_AUTH_IDENTITY_VALUE: "${NACOS_AUTH_IDENTITY_VALUE:?NACOS_AUTH_IDENTITY_VALUE is required in production}"
+    # 生产环境不暴露 gRPC 端口
+    ports:
+      - "${NACOS_PORT:-8848}:8848"
+
+  # ==================== 应用生产配置 ====================
+  gateway:
+    environment:
+      SPRING_PROFILES_ACTIVE: prod,docker
+      NACOS_CONFIG_ENABLED: "true"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: "1.0"
+
+  auth:
+    environment:
+      SPRING_PROFILES_ACTIVE: prod,docker
+      NACOS_CONFIG_ENABLED: "true"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      # 生产环境 Cookie 启用 Secure（HTTPS）
+      SERVER_SERVLET_COOKIE_SECURE: "true"
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: "1.0"
+
+  system:
+    environment:
+      SPRING_PROFILES_ACTIVE: prod,docker
+      NACOS_CONFIG_ENABLED: "true"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      # 生产环境强制要求 PostgreSQL 密码
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required in production}"
+      # 生产环境强制要求 MinIO 密码
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?MINIO_ROOT_PASSWORD is required in production}"
+    deploy:
+      resources:
+        limits:
+          memory: 1.5g
+          cpus: "1.5"
+
+  frontend:
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.5"

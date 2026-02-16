@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter
+  xmlns="https://github.com/spotbugs/filter/3.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+
+  <!--
+    SpotBugs 排除配置
+    集成 Find Security Bugs + SB-Contrib 插件
+    用于排除特定的 bug 模式或文件
+
+    Bug 模式分类:
+    - CORRECTNESS: 正确性问题
+    - BAD_PRACTICE: 不良实践
+    - PERFORMANCE: 性能问题
+    - SECURITY: 安全问题
+    - STYLE: 代码风格
+    - MALICIOUS_CODE: 恶意代码漏洞
+    - I18N: 国际化问题
+    - MT_CORRECTNESS: 多线程正确性
+  -->
+
+  <!-- ========== 生成代码排除 ========== -->
+
+  <!-- 排除生成的代码（MapStruct、Lombok、QueryDSL 等）-->
+  <Match>
+    <Source name="~.*generated.*" />
+  </Match>
+  <Match>
+    <Source name="~.*Generated.*" />
+  </Match>
+  <Match>
+    <Class name="~.*\$.*" />
+    <Bug category="STYLE" />
+  </Match>
+
+  <!-- MapStruct Mapper 实现类完全排除 -->
+  <Match>
+    <Class name="~.*MapperImpl$" />
+  </Match>
+
+  <!-- QueryDSL Q 类排除 -->
+  <Match>
+    <Class name="~.*\.Q[A-Z].*" />
+  </Match>
+
+  <!-- ========== 测试代码排除 ========== -->
+
+  <!-- 排除测试代码的某些检查 -->
+  <Match>
+    <Or>
+      <Source name="~.*Test\.java" />
+      <Source name="~.*Tests\.java" />
+      <Source name="~.*IT\.java" />
+      <Source name="~.*Spec\.java" />
+    </Or>
+    <Or>
+      <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT" />
+      <Bug pattern="RV_RETURN_VALUE_IGNORED" />
+      <Bug pattern="DM_DEFAULT_ENCODING" />
+      <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE" />
+      <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+      <Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION" />
+      <Bug pattern="HARD_CODE_PASSWORD" />
+      <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME" />
+    </Or>
+  </Match>
+
+  <!-- ========== Lombok 生成代码排除 ========== -->
+
+  <!-- 排除 Lombok @Data/@Getter/@Setter 生成的代码（内部表示暴露）-->
+  <Match>
+    <Or>
+      <Class name="~.*\.(entity|dto|vo|domain|model|request|response)\..*" />
+      <Class name="~.*Entity$" />
+      <Class name="~.*DTO$" />
+      <Class name="~.*VO$" />
+      <Class name="~.*Request$" />
+      <Class name="~.*Response$" />
+      <Class name="~.*Query$" />
+      <Class name="~.*Param$" />
+    </Or>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+      <Bug pattern="MS_EXPOSE_REP" />
+      <Bug pattern="MS_PKGPROTECT" />
+      <Bug pattern="SE_BAD_FIELD" />
+      <Bug pattern="SE_NO_SERIALVERSIONID" />
+    </Or>
+  </Match>
+
+  <!-- ========== Spring Framework 排除 ========== -->
+
+  <!-- 排除 Spring 服务类的构造函数注入（设计如此）-->
+  <Match>
+    <Or>
+      <Class name="~.*Service$" />
+      <Class name="~.*ServiceImpl$" />
+      <Class name="~.*Controller$" />
+      <Class name="~.*Handler$" />
+      <Class name="~.*Listener$" />
+      <Class name="~.*Interceptor$" />
+      <Class name="~.*Advice$" />
+      <Class name="~.*Resolver$" />
+    </Or>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP2" />
+      <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+      <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
+    </Or>
+  </Match>
+
+  <!-- 排除 Spring Aspect 类 -->
+  <Match>
+    <Class name="~.*Aspect$" />
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP2" />
+      <Bug pattern="URF_UNREAD_FIELD" />
+    </Or>
+  </Match>
+
+  <!-- 排除 Spring Configuration 类 -->
+  <Match>
+    <Or>
+      <Class name="~.*Config$" />
+      <Class name="~.*Configuration$" />
+      <Class name="~.*Properties$" />
+    </Or>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+      <Bug pattern="MS_SHOULD_BE_FINAL" />
+    </Or>
+  </Match>
+
+  <!-- 排除 Spring Application 启动类 -->
+  <Match>
+    <Class name="~.*Application$" />
+  </Match>
+
+  <!-- ========== 设计模式相关排除 ========== -->
+
+  <!-- 排除 Builder 模式类 -->
+  <Match>
+    <Class name="~.*Builder$" />
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Or>
+  </Match>
+
+  <!-- 排除消息类和事件类 -->
+  <Match>
+    <Or>
+      <Class name="~.*Message$" />
+      <Class name="~.*Event$" />
+      <Class name="~.*Command$" />
+    </Or>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Or>
+  </Match>
+
+  <!-- ========== 工具类排除 ========== -->
+
+  <!-- 排除工具类的内部表示暴露 -->
+  <Match>
+    <Or>
+      <Class name="~.*Utils$" />
+      <Class name="~.*Util$" />
+      <Class name="~.*Helper$" />
+      <Class name="~.*Constants$" />
+      <Class name="~.*Constant$" />
+    </Or>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+      <Bug pattern="MS_EXPOSE_REP" />
+      <Bug pattern="MS_MUTABLE_ARRAY" />
+      <Bug pattern="MS_MUTABLE_COLLECTION" />
+    </Or>
+  </Match>
+
+  <!-- 排除 Result/Response 包装类 -->
+  <Match>
+    <Or>
+      <Class name="~.*Result$" />
+      <Class name="~.*R$" />
+    </Or>
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Or>
+  </Match>
+
+  <!-- ========== Find Security Bugs 插件排除 ========== -->
+
+  <!-- 排除 SPEL 注入警告（脚本引擎设计如此）-->
+  <Match>
+    <Class name="~.*SpelScriptEngine" />
+    <Bug pattern="SPEL_INJECTION" />
+  </Match>
+
+  <!-- 排除弱哈希函数警告（兼容性考虑，应评估后使用）-->
+  <Match>
+    <Class name="~.*CryptoUtils" />
+    <Or>
+      <Bug pattern="WEAK_MESSAGE_DIGEST_MD5" />
+      <Bug pattern="WEAK_MESSAGE_DIGEST_SHA1" />
+    </Or>
+  </Match>
+
+  <!-- 排除路径遍历警告（文件工具类需要额外验证）-->
+  <Match>
+    <Class name="~.*FileUtils" />
+    <Or>
+      <Bug pattern="PATH_TRAVERSAL_IN" />
+      <Bug pattern="PATH_TRAVERSAL_OUT" />
+    </Or>
+  </Match>
+
+  <!-- 排除静态字段写入警告（Spring 工具类）-->
+  <Match>
+    <Class name="~.*SpringUtils" />
+    <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+  </Match>
+
+  <!-- 排除类名与超类相同警告（工具类扩展）-->
+  <Match>
+    <Class name="~.*StringUtils" />
+    <Bug pattern="NM_SAME_SIMPLE_NAME_AS_SUPERCLASS" />
+  </Match>
+
+  <!-- 排除冗余 null 检查警告（Lombok 生成）-->
+  <Match>
+    <Class name="~.*BaseEntity" />
+    <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+  </Match>
+
+  <!-- ========== 非空性问题排除 ========== -->
+
+  <!-- 排除非空性问题（仅对 config/filter 类，业务类应使用 @Nullable/@NonNull 注解）-->
+  <Match>
+    <Or>
+      <Class name="~.*\.config\..*" />
+      <Class name="~.*\.filter\..*" />
+      <Class name="~.*\.handler\..*" />
+    </Or>
+    <Bug pattern="NP_NULL_PARAM_DEREF_NONVIRTUAL" />
+  </Match>
+
+  <!-- ========== 序列化问题排除 ========== -->
+
+  <!-- 排除序列化相关问题 -->
+  <Match>
+    <Or>
+      <Class name="~.*\.(entity|domain)\..*" />
+      <Class name="~.*Exception$" />
+    </Or>
+    <Or>
+      <Bug pattern="SE_BAD_FIELD" />
+      <Bug pattern="SE_NO_SERIALVERSIONID" />
+      <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
+    </Or>
+  </Match>
+
+  <!-- ========== 日志相关排除 ========== -->
+
+  <!-- 排除日志相关的误报 -->
+  <Match>
+    <Or>
+      <Bug pattern="SLF4J_LOGGER_SHOULD_BE_PRIVATE" />
+      <Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC" />
+      <Bug pattern="SLF4J_LOGGER_SHOULD_BE_FINAL" />
+      <Bug pattern="SLF4J_FORMAT_SHOULD_BE_CONST" />
+    </Or>
+  </Match>
+
+  <!-- ========== 字符串比较排除 ========== -->
+
+  <!-- 允许 String.equals() 中使用变量在前 -->
+  <Match>
+    <Bug pattern="ES_COMPARING_STRINGS_WITH_EQ" />
+  </Match>
+
+  <!-- ========== SB-Contrib 插件排除 ========== -->
+
+  <!-- 排除一些过于严格的 SB-Contrib 规则 -->
+  <Match>
+    <Or>
+      <Bug pattern="FCBL_FIELD_COULD_BE_LOCAL" />
+      <Bug pattern="OCP_OVERLY_CONCRETE_PARAMETER" />
+      <Bug pattern="LSC_LITERAL_STRING_COMPARISON" />
+      <Bug pattern="CLI_CONSTANT_LIST_INDEX" />
+      <Bug pattern="PCOA_PARTIALLY_CONSTRUCTED_OBJECT_ACCESS" />
+    </Or>
+  </Match>
+
+  <!-- 排除 DTO/VO 中的方法返回常量警告 -->
+  <Match>
+    <Or>
+      <Class name="~.*DTO$" />
+      <Class name="~.*VO$" />
+    </Or>
+    <Bug pattern="MRC_METHOD_RETURNS_CONSTANT" />
+  </Match>
+
+  <!-- ========== 资源管理排除 ========== -->
+
+  <!-- 排除资源未关闭警告（Spring 管理的资源）-->
+  <Match>
+    <Or>
+      <Class name="~.*Repository$" />
+      <Class name="~.*RepositoryImpl$" />
+      <Class name="~.*Dao$" />
+      <Class name="~.*DaoImpl$" />
+    </Or>
+    <Or>
+      <Bug pattern="ODR_OPEN_DATABASE_RESOURCE" />
+      <Bug pattern="OBL_UNSATISFIED_OBLIGATION" />
+    </Or>
+  </Match>
+
+  <!-- ========== HTTP 安全相关排除（需要评估）========== -->
+
+  <!-- 排除 HTTP 响应拆分警告（已通过其他方式验证）-->
+  <Match>
+    <Class name="~.*Controller$" />
+    <Or>
+      <Bug pattern="HTTP_RESPONSE_SPLITTING" />
+      <Bug pattern="HRS_REQUEST_PARAMETER_TO_HTTP_HEADER" />
+    </Or>
+  </Match>
+
+  <!-- SQL 注入排除（使用参数化查询）-->
+  <Match>
+    <Or>
+      <Class name="~.*Mapper$" />
+      <Class name="~.*Repository$" />
+    </Or>
+    <Bug pattern="SQL_INJECTION_JDBC" />
+  </Match>
+
+  <!-- ========== 其他常见排除 ========== -->
+
+  <!-- 排除枚举类的警告 -->
+  <Match>
+    <Class name="~.*Enum$" />
+    <Or>
+      <Bug pattern="SE_BAD_FIELD" />
+      <Bug pattern="MS_MUTABLE_ARRAY" />
+    </Or>
+  </Match>
+
+  <!-- 排除常量类的警告 -->
+  <Match>
+    <Or>
+      <Class name="~.*Constants$" />
+      <Class name="~.*Constant$" />
+    </Or>
+    <Or>
+      <Bug pattern="MS_MUTABLE_ARRAY" />
+      <Bug pattern="MS_MUTABLE_COLLECTION" />
+      <Bug pattern="MS_MUTABLE_COLLECTION_PKGPROTECT" />
+    </Or>
+  </Match>
+
+</FindBugsFilter>

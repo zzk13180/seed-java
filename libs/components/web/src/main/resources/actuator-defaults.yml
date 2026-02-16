@@ -1,0 +1,82 @@
+# ========================================
+# Seed Cloud - 统一 Actuator 健康检查配置
+# ========================================
+# 此配置文件提供微服务健康检查的统一标准
+# 各服务应在 application.yml 中引入此配置：
+#   spring.config.import: classpath:actuator-defaults.yml
+# ========================================
+
+management:
+  # 端点配置
+  endpoints:
+    web:
+      exposure:
+        # 暴露的端点
+        include: health,info,metrics,prometheus,loggers,env
+      base-path: /actuator
+
+  # 单个端点配置
+  endpoint:
+    health:
+      # 健康详情显示策略: never, when_authorized, always
+      show-details: when_authorized
+      # 组件详情显示策略
+      show-components: when_authorized
+      # 启用 liveness 和 readiness 探针
+      probes:
+        enabled: true
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+    loggers:
+      enabled: true
+    env:
+      enabled: true
+
+  # 健康检查配置
+  health:
+    # 默认健康指示器
+    defaults:
+      enabled: true
+    # 磁盘空间检查
+    diskspace:
+      enabled: true
+      threshold: 100MB
+    # 数据库健康检查
+    db:
+      enabled: true
+    # Redis 健康检查
+    redis:
+      enabled: true
+    # Nacos 健康检查
+    nacos:
+      enabled: true
+
+  # 应用信息配置
+  info:
+    env:
+      enabled: true
+    git:
+      enabled: true
+      mode: full
+    build:
+      enabled: true
+    java:
+      enabled: true
+    os:
+      enabled: true
+
+  # Prometheus 指标配置
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+  # 指标配置
+  metrics:
+    tags:
+      application: ${spring.application.name:unknown}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true

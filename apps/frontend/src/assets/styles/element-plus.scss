@@ -1,0 +1,139 @@
+/**
+ * Element Plus 样式覆盖 — 极简主义
+ */
+
+// 自定义主题色 — 沉稳绿
+:root {
+  --el-color-primary: #2d9d5e;
+  --el-color-primary-light-3: #5ab882;
+  --el-color-primary-light-5: #8ad0a6;
+  --el-color-primary-light-7: #c1e6d2;
+  --el-color-primary-light-8: #ddf1e5;
+  --el-color-primary-light-9: #f0f9f4;
+  --el-color-primary-dark-2: #1a7a42;
+
+  // 更柔和的全局字号与间距
+  --el-font-size-base: 14px;
+  --el-border-radius-base: 8px;
+  --el-border-color-lighter: #f0f0f0;
+}
+
+// 按钮 — 简洁无边框感
+.el-button {
+  --el-button-border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.el-button--primary {
+  --el-button-bg-color: var(--el-color-primary);
+  --el-button-border-color: var(--el-color-primary);
+  --el-button-hover-bg-color: var(--el-color-primary-dark-2);
+  --el-button-hover-border-color: var(--el-color-primary-dark-2);
+}
+
+// 卡片 — 极简卡片：无边框，极淡阴影
+.el-card {
+  --el-card-border-radius: var(--seed-radius-lg);
+  --el-card-padding: 24px;
+  border: none;
+  box-shadow: var(--seed-shadow-sm);
+
+  &.is-hover-shadow:hover {
+    box-shadow: var(--seed-shadow);
+  }
+}
+
+// 表格 — 极简表格：去除斑马纹，更多留白
+.el-table {
+  --el-table-border-color: transparent;
+  --el-table-row-hover-bg-color: var(--seed-bg-page);
+  font-size: 13px;
+
+  th.el-table__cell {
+    background-color: transparent !important;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--seed-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--seed-border-color) !important;
+  }
+
+  td.el-table__cell {
+    border-bottom: 1px solid var(--seed-border-light) !important;
+  }
+
+  &--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+    background: transparent;
+  }
+}
+
+// 对话框 — 简洁弹窗，大圆角
+.el-dialog {
+  --el-dialog-border-radius: 16px;
+  --el-dialog-padding-primary: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+// 输入框 — 简洁输入框
+.el-input {
+  --el-input-border-radius: 8px;
+  --el-input-border-color: var(--seed-border-color);
+
+  &.is-focus .el-input__wrapper,
+  .el-input__wrapper:hover {
+    box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+  }
+}
+
+// 菜单 — 极简侧边栏菜单
+.el-menu {
+  border-right: none !important;
+  --el-menu-bg-color: transparent;
+
+  .el-menu-item,
+  .el-sub-menu__title {
+    border-radius: 8px;
+    margin: 2px 10px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    color: var(--seed-text-secondary);
+    transition: all 0.15s ease;
+
+    &.is-active {
+      background-color: var(--el-color-primary-light-9);
+      color: var(--el-color-primary);
+      font-weight: 500;
+    }
+
+    &:hover {
+      background-color: var(--seed-bg-page);
+      color: var(--seed-text-primary);
+    }
+  }
+}
+
+// 分页 — 简洁分页
+.el-pagination {
+  --el-pagination-font-size: 13px;
+}
+
+// 描述列表 — 简洁
+.el-descriptions {
+  .el-descriptions__label {
+    font-weight: 400;
+    color: var(--seed-text-muted);
+  }
+}
+
+// 面包屑
+.el-breadcrumb {
+  font-size: 13px;
+}
+
+// 分割线
+.el-divider {
+  border-top-color: var(--seed-border-light);
+}

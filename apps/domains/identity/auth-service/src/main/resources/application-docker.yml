@@ -1,0 +1,14 @@
+# Docker 环境配置
+# 此配置覆盖默认配置，用于 Docker 容器部署
+
+# 禁用 OAuth2 客户端配置（使用 Sa-Token 本地认证）
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration
+
+# 如需启用 OAuth2，请在 .env 中配置以下变量：
+# OAUTH2_ISSUER_URI=https://your-actual-logto-instance.logto.app/oidc
+# OAUTH2_CLIENT_ID=your-actual-client-id
+# OAUTH2_CLIENT_SECRET=your-actual-client-secret

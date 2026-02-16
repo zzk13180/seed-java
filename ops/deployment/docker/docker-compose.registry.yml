@@ -1,0 +1,69 @@
+# 用于部署私有 Docker 镜像仓库（Registry）
+#
+# 使用指南：
+# 1. 准备认证文件：
+#    - 创建 auth 目录：mkdir -p auth
+#    - 生成 htpasswd 文件：docker run --rm httpd:2.4-alpine htpasswd -nbB username password > auth/htpasswd
+#      将 username 和 password 替换为实际的用户名和密码
+#
+# 2. 准备证书（可选，用于 HTTPS）：
+#    - 创建 certs 目录：mkdir -p certs
+#    - 生成自签名证书（仅用于测试）：
+#      openssl req -newkey rsa:4096 -nodes -sha256 -keyout certs/tls.key -x509 -days 365 -out certs/tls.crt
+#    - 或者使用真实的证书文件
+#
+# 3. 启动服务：
+#    - docker compose -f ./docker-compose.registry.yml up -d
+#
+# 4. 推送镜像到私有仓库：
+#    - 标记镜像：docker tag my-image localhost:5000/my-image
+#    - 推送镜像：docker push localhost:5000/my-image
+#
+# 5. 从私有仓库拉取镜像：
+#    - docker pull localhost:5000/my-image
+#
+# 6. 查看仓库中的镜像：
+#    - curl -u username:password https://localhost:5000/v2/_catalog
+#
+# 注意：
+# - 如果不使用 HTTPS，请在 Docker daemon 配置中添加 "insecure-registries": ["localhost:5000"]
+
+services:
+  registry:
+    image: registry:2.8
+    container_name: private-registry
+    restart: unless-stopped # 容器崩溃时自动重启
+    ports:
+      - "5000:5000" # 映射到主机端口5000
+    environment:
+      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/var/lib/registry # 存储根目录
+      - REGISTRY_HTTP_ADDR=0.0.0.0:5000 # 监听所有接口
+      - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/tls.crt # HTTPS证书路径（可选）
+      - REGISTRY_HTTP_TLS_KEY=/certs/tls.key # HTTPS密钥路径（可选）
+      - REGISTRY_AUTH=htpasswd # 启用基本认证
+      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd # 认证文件路径
+      - REGISTRY_STORAGE_DELETE_ENABLED=true # 允许删除镜像（生产慎用）
+    volumes:
+      - registry_data:/var/lib/registry # 持久化镜像数据
+      - ./auth:/auth:ro # 挂载认证文件（只读）
+      - ./certs:/certs:ro # 挂载证书（只读，可选）
+    networks:
+      - registry_net
+    healthcheck: # 健康检查，确保服务可用
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    security_opt:
+      - no-new-privileges:true # 安全：禁用特权升级
+    user: "1000:1000" # 非root用户（如果镜像支持；官方Registry默认root，可移除）
+
+volumes:
+  registry_data: # 命名卷，持久化数据
+    driver: local
+
+networks:
+  registry_net: # 自定义网络，隔离服务
+    driver: bridge

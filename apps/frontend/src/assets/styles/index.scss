@@ -1,0 +1,15 @@
+/**
+ * 主样式入口文件
+ */
+
+// 导入变量
+@use './variables.scss' as *;
+
+// 导入通用样式
+@use './common.scss' as *;
+
+// 导入 Element Plus 覆盖样式
+@use './element-plus.scss' as *;
+
+// 导入过渡动画
+@use './transition.scss' as *;
